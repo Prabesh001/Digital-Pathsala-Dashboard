@@ -1,0 +1,25 @@
+GET http://localhost:5000/students
+
+###
+GET http://localhost:5000/students/67aa4b45b221fd35d5854cb3
+
+###
+DELETE http://localhost:5000/students
+
+###
+Patch http://localhost:5000/students
+content-type: application/json
+{"name": "My Name"}
+###
+
+POST http://localhost:5000/students
+content-type: application/json
+{
+    "name": "My Name",
+    "email": "prabeshdahal123@gmail.com",
+    "phone": "9804382088",
+    "course": "999 Offer",
+    "status": "Pending",
+    "date": "11/02/2025",
+    "remarks": "I am interested in learning MERN stack."
+}
