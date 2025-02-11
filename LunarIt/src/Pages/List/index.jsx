@@ -60,7 +60,7 @@ const Student = () => {
             toolbar: {
               showQuickFilter: true,
               sx: {
-                backgroundColor: "lightgray",
+                backgroundColor: "#fafafa",
                 "& .MuiTypography-root": {
                   color: "black",
                 },

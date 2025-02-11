@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from "react";
-import Form from "../Form";
-import List from "../List";
+import Form from "../../Pages/Form";
+import List from "../../Pages/List";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { dashboardComponents } from "../../Js/data";
-import SVG from "../SVG";
+import SVG from "../../Template/SVG";
+import useLocalStorage from "../../Template/useLocalStorage"
 
 const Dashboard = () => {
-  const [showSidebar, setShowSidebar] = useState(window.innerWidth > 700);
+  const [showSidebar, setShowSidebar] = useState(window.innerWidth > 800);
 
   useEffect(() => {
     const handleResize = () => {
-      setShowSidebar(window.innerWidth > 700);
+      setShowSidebar(window.innerWidth > 800);
     };
 
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
-  const [selectedIndex, setSelectedIndex] = useState("Form");
+
+  const [selectedIndex, setSelectedIndex] = useLocalStorage("selected-index", "Form");
+
+
   const navigate = useNavigate();
 
   return (
