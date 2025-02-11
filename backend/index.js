@@ -6,14 +6,17 @@ const mongoose = require("mongoose");
 const Port = process.env.PORT;
 const { Student, Admin } = require("./Schema/schema");
 const bcrypt = require("bcryptjs");
+const emailRoutes = require("./email/emailRoutes")
 
 app.use(express.json());
 app.use(cors());
 
 mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected to MongoDB Atlas"))
-  .catch((err) => console.error("Failed to connect to MongoDB Atlas:", err));
+.connect(process.env.MONGO_URI)
+.then(() => console.log("Connected to MongoDB Atlas"))
+.catch((err) => console.error("Failed to connect to MongoDB Atlas:", err));
+
+app.use("/api", emailRoutes);
 
 app.get("/students", async (req, res) => {
   try {

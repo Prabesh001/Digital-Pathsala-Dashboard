@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { columns } from "../../Js/data";
 import { Button } from "@mui/material";
-import { fetchStudents, deleteStudents } from "../../Js/index";
+import { fetchStudents, deleteStudents, sendEmails } from "../../Js/index";
 import { ToastContainer, toast } from "react-toastify";
 
 const Student = () => {
@@ -35,6 +35,31 @@ const Student = () => {
       setTeam(team);
     } catch (err) {
       toast.error("Delete failed: " + err.message);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    try {
+      const selectedStudents = team.filter(student => 
+        selectedRows.includes(student.id)
+      );
+      const emails = selectedStudents.map(student => student.email);
+      
+      const response = await fetch("http://localhost:5000/api/send-emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emails }),
+      });
+  
+      if (!response.ok) throw new Error("Request failed");
+      
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {};
+      
+      toast.success(data.message || "Emails sent!");
+      setSelectedRows([]);
+    } catch (err) {
+      toast.error("Failed to send emails: " + err.message);
     }
   };
 
@@ -83,6 +108,7 @@ const Student = () => {
           color="primary"
           variant="contained"
           sx={{ mb: "20px" }}
+          onClick={handleSendEmail}
           disabled={selectedRows.length === 0}
         >
           Send Mail ({selectedRows.length})
