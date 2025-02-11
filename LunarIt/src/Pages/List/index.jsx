@@ -9,7 +9,6 @@ import { ToastContainer, toast } from "react-toastify";
 const Student = () => {
   const [team, setTeam] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows);
 
   useEffect(() => {
     const getStudents = async () => {

@@ -1,6 +1,13 @@
 GET http://localhost:5000/students
 
 ###
+GET http://localhost:5000/admin
+
+###
+GET http://localhost:5000/admin/prabeshdaahal123@gmail.com
+
+
+###
 GET http://localhost:5000/students/67aa4b45b221fd35d5854cb3
 
 ###

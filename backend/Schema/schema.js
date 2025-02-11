@@ -42,4 +42,25 @@ const studentSchema = new mongoose.Schema(
 
 const Student = mongoose.model("Students", studentSchema);
 
-module.exports = Student;
+const adminSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: [true, "Phone number is required"],
+    },
+  },
+  { collection: "Admin", versionKey: false }
+);
+
+const Admin = mongoose.model("Admin", adminSchema);
+
+module.exports = { Student, Admin };

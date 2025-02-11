@@ -1,5 +1,6 @@
 import axios from "axios";
 const url = "http://localhost:5000/students";
+const admin_url = "http://localhost:5000/admin";
 
 export const insertStudent = async (mappedValues) => {
   try {
@@ -33,6 +34,21 @@ export const fetchStudents = async () => {
   } catch (error) {
     console.error("Error fetching items:", error);
     return [];
+  }
+};
+
+export const fetchStudentsByEmail = async (email) => {
+  try {
+    const response = await axios.get(`${admin_url}/${email}`);
+
+    if (response.status !== 200) {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
   }
 };
 

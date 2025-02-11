@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import Form from "../../Pages/Form";
 import List from "../../Pages/List";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { dashboardComponents } from "../../Js/data";
 import SVG from "../../Template/SVG";
-import useLocalStorage from "../../Template/useLocalStorage"
+import useLocalStorage from "../../Template/useLocalStorage";
+import Login from "../../Pages/Login/Login";
+
+export const MyAuthContext = createContext();
 
 const Dashboard = () => {
   const [showSidebar, setShowSidebar] = useState(window.innerWidth > 800);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -19,8 +23,10 @@ const Dashboard = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const [selectedIndex, setSelectedIndex] = useLocalStorage("selected-index", "Form");
-
+  const [selectedIndex, setSelectedIndex] = useLocalStorage(
+    "selected-index",
+    "Form"
+  );
 
   const navigate = useNavigate();
 
@@ -64,7 +70,7 @@ const Dashboard = () => {
           showSidebar ? "ml-65" : ""
         } transition-all duration-300 flex flex-col flex-1 overflow-y-auto`}
       >
-        <div className="flex items-center justify-between h-16 bg-white border-b border-gray-200">
+        <div className="flex items-center justify-between min-h-16 h-16 bg-white border-b border-gray-200">
           <div className="flex items-center px-4">
             <button
               className="text-gray-500 focus:outline-none focus:text-gray-700 cursor-pointer"
@@ -92,11 +98,13 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <Routes>
-          <Route path="/" element={<Form />}></Route>
-          <Route path="/form" element={<Form />}></Route>
-          <Route path="/Students" element={<List />}></Route>
-        </Routes>
+        <MyAuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+          <Routes>
+            <Route path="/" element={<Login />}></Route>
+            <Route path="/form" element={<Form />}></Route>
+            <Route path="/Students" element={<List />}></Route>
+          </Routes>
+        </MyAuthContext.Provider>
       </div>
     </div>
   );

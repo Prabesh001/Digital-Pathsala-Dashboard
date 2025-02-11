@@ -4,7 +4,8 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Port = process.env.PORT;
-const Student = require("./Schema/schema");
+const { Student, Admin } = require("./Schema/schema");
+const bcrypt = require("bcryptjs");
 
 app.use(express.json());
 app.use(cors());
@@ -92,6 +93,67 @@ app.post("/students", async (req, res) => {
   } catch (err) {
     console.error("Error in adding Student:", err);
     res.status(500).json({ message: err.message, error: err });
+  }
+});
+
+//Admin
+app.post("/admin", async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!email || !password || !name) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newAdmin = new Admin({
+      name,
+      email,
+      password: hashedPassword, // Use hashed password
+    });
+
+    await newAdmin.save();
+    res.status(201).json({ message: "Admin added successfully", newAdmin });
+  } catch (err) {
+    console.error("Error in adding Admin:", err);
+    res.status(500).json({ message: err.message, error: err });
+  }
+});
+
+app.get("/admin", async (req, res) => {
+  try {
+    const admin = await Admin.find();
+    res.json(admin);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Admin." });
+  }
+});
+
+app.route("/admin/:email").get(async (req, res) => {
+  try {
+    const { email } = req.params;
+    const admin = await Admin.findOne({ email: email });
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+    res.json(admin);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}).delete(async (req, res) => {
+  try {
+    const {email} = req.params;
+    const deleteId = await Admin.findOneAndDelete({ email: email });
+
+    if (!deleteId) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.json({ message: "Deleted Admin:", deleteId });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
