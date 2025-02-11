@@ -100,58 +100,60 @@ const Hero = () => {
                 helperText={touched.phone && errors.phone}
                 sx={{ gridColumn: "span 4" }}
               />
-              <FormControl
-                sx={{ mt: 1, minWidth: 150 }}
-                error={!!touched.course && !!errors.course}
-              >
-                <InputLabel id="demo-simple-select-label">Course</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={values.course}
-                  label="Course"
-                  name="course"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{ gridColumn: "span 4" }}
-                  autoWidth
+              <Box display="flex" gap={3}>
+                <FormControl
+                  sx={{ mt: 1, minWidth: 150 }}
+                  error={!!touched.course && !!errors.course}
                 >
-                  <MenuItem value="999 Offer">999 Offer</MenuItem>
-                  <MenuItem value="MERN">MERN</MenuItem>
-                  <MenuItem value="Python">Python</MenuItem>
-                </Select>
-                <FormHelperText>
-                  {touched.course && errors.course}
-                </FormHelperText>{" "}
-                {/* Display error here */}
-              </FormControl>
-              <FormControl
-                sx={{ mt: 1, minWidth: 100 }}
-                error={!!touched.status && !!errors.status}
-              >
-                <InputLabel id="demo-simple-select-autowidth-label">
-                  Status
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={values.status}
-                  label="Status"
-                  name="status"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  sx={{ gridColumn: "span 4" }}
-                  autoWidth
+                  <InputLabel id="demo-simple-select-label">Course</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={values.course}
+                    label="Course"
+                    name="course"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    sx={{ gridColumn: "span 4" }}
+                    autoWidth
+                  >
+                    <MenuItem value="999 Offer">999 Offer</MenuItem>
+                    <MenuItem value="MERN">MERN</MenuItem>
+                    <MenuItem value="Python">Python</MenuItem>
+                  </Select>
+                  <FormHelperText>
+                    {touched.course && errors.course}
+                  </FormHelperText>{" "}
+                  {/* Display error here */}
+                </FormControl>
+                <FormControl
+                  sx={{ mt: 1, minWidth: 120 }}
+                  error={!!touched.status && !!errors.status}
                 >
-                  <MenuItem value="Pending">Pending</MenuItem>
-                  <MenuItem value="Purchased">Purchased</MenuItem>
-                  <MenuItem value="Follow Up">Follow Up</MenuItem>
-                </Select>
-                <FormHelperText>
-                  {touched.status && errors.status}
-                </FormHelperText>{" "}
-                {/* Display error here */}
-              </FormControl>
+                  <InputLabel id="demo-simple-select-autowidth-label">
+                    Status
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    value={values.status}
+                    label="Status"
+                    name="status"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    sx={{ gridColumn: "span 4" }}
+                    autoWidth
+                  >
+                    <MenuItem value="Pending">Pending</MenuItem>
+                    <MenuItem value="Purchased">Purchased</MenuItem>
+                    <MenuItem value="Follow Up">Follow Up</MenuItem>
+                  </Select>
+                  <FormHelperText>
+                    {touched.status && errors.status}
+                  </FormHelperText>{" "}
+                  {/* Display error here */}
+                </FormControl>
+              </Box>
               <TextField
                 fullWidth
                 type="remarks"
