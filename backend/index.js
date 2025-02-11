@@ -131,7 +131,8 @@ app.get("/admin", async (req, res) => {
   }
 });
 
-app.route("/admin/:email").get(async (req, res) => {
+app.route("/admin/:email")
+.get(async (req, res) => {
   try {
     const { email } = req.params;
     const admin = await Admin.findOne({ email: email });

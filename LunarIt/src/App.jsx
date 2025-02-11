@@ -1,15 +1,36 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./Components/Dashboard";
-import { BrowserRouter } from "react-router-dom";
-
+import Login from "./Pages/Login/Login";
+import ProtectedRoute from "./Template/ProtectedRoute";
+import useLocalStorage from "./Template/useLocalStorage";
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useLocalStorage("isAuthenticated", false);
+
   return (
-    <>
-      <BrowserRouter>
-        <Dashboard />
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/form" replace />
+            ) : (
+              <Login setIsAuthenticated={setIsAuthenticated} />
+            )
+          }
+        />
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute condition={isAuthenticated} failDestination="/">
+              <Dashboard setIsAuthenticated={setIsAuthenticated} />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

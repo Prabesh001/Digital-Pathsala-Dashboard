@@ -1,34 +1,31 @@
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "../../Pages/Form";
 import List from "../../Pages/List";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { dashboardComponents } from "../../Js/data";
 import SVG from "../../Template/SVG";
 import useLocalStorage from "../../Template/useLocalStorage";
-import Login from "../../Pages/Login/Login";
 
-export const MyAuthContext = createContext();
-
-const Dashboard = () => {
+const Dashboard = ({ setIsAuthenticated }) => {
   const [showSidebar, setShowSidebar] = useState(window.innerWidth > 800);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useLocalStorage(
+    "selected-index",
+    "Form"
+  );
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
       setShowSidebar(window.innerWidth > 800);
     };
-
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const [selectedIndex, setSelectedIndex] = useLocalStorage(
-    "selected-index",
-    "Form"
-  );
-
-  const navigate = useNavigate();
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    navigate("/");
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -66,9 +63,9 @@ const Dashboard = () => {
       </div>
 
       <div
-        className={`${
-          showSidebar ? "ml-65" : ""
-        } transition-all duration-300 flex flex-col flex-1 overflow-y-auto`}
+        className={`transition-all duration-300 ${
+          showSidebar ? "ml-62" : ""
+        } flex flex-col flex-1 overflow-y-auto`}
       >
         <div className="flex items-center justify-between min-h-16 h-16 bg-white border-b border-gray-200">
           <div className="flex items-center px-4">
@@ -92,19 +89,19 @@ const Dashboard = () => {
             />
           </div>
           <div className="flex items-center pr-4">
-            <button className="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700">
-              <SVG stroke={"M12 19l-7-7 7-7m5 14l7-7-7-7"} sw={2} />
+            <button
+              onClick={handleLogout}
+              className="flex transition-all duration-200 items-center border-2 p-1 text-gray-500 hover:bg-red-600 hover:text-white"
+            >
+              Logout
             </button>
           </div>
         </div>
 
-        <MyAuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-          <Routes>
-            <Route path="/" element={<Login />}></Route>
-            <Route path="/form" element={<Form />}></Route>
-            <Route path="/Students" element={<List />}></Route>
-          </Routes>
-        </MyAuthContext.Provider>
+        <Routes>
+          <Route path="/form" element={<Form />} />
+          <Route path="/students" element={<List />} />
+        </Routes>
       </div>
     </div>
   );
