@@ -15,7 +15,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { toast, ToastContainer } from "react-toastify";
 import { insertStudent } from "../../Js/index";
 
-const Hero = () => {
+const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = async (values, { resetForm }) => {
@@ -40,142 +40,144 @@ const Hero = () => {
   };
 
   return (
-    <Box m="20px">
-      <ToastContainer />
-      <Formik
-        onSubmit={handleFormSubmit}
-        initialValues={initialValues}
-        validationSchema={checkoutSchema}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <Box
-              display="grid"
-              gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-              }}
-            >
-              <TextField
-                fullWidth
-                type="text"
-                label="Name"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.name}
-                name="name"
-                error={!!touched.name && !!errors.name}
-                helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                fullWidth
-                type="text"
-                label="Email"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                fullWidth
-                type="phone"
-                label="Phone"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.phone}
-                name="phone"
-                error={!!touched.phone && !!errors.phone}
-                helperText={touched.phone && errors.phone}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <Box display="flex" gap={3}>
-                <FormControl
-                  sx={{ mt: 1, minWidth: 150 }}
-                  error={!!touched.course && !!errors.course}
+      <Box m="20px">
+        <ToastContainer />
+        <Formik
+          onSubmit={handleFormSubmit}
+          initialValues={initialValues}
+          validationSchema={checkoutSchema}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <Box
+                display="grid"
+                gap="30px"
+                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                sx={{
+                  "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                }}
+              >
+                <TextField
+                  fullWidth
+                  type="text"
+                  label="Name"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.name}
+                  name="name"
+                  error={!!touched.name && !!errors.name}
+                  helperText={touched.name && errors.name}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <TextField
+                  fullWidth
+                  type="text"
+                  label="Email"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.email}
+                  name="email"
+                  error={!!touched.email && !!errors.email}
+                  helperText={touched.email && errors.email}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <TextField
+                  fullWidth
+                  type="phone"
+                  label="Phone"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.phone}
+                  name="phone"
+                  error={!!touched.phone && !!errors.phone}
+                  helperText={touched.phone && errors.phone}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <Box
+                  display="flex"
+                  sx={{
+                    flexWrap: { sm:"nowrap" ,xs: "wrap" },
+                  }}
+                  gap={3}
                 >
-                  <InputLabel id="demo-simple-select-label">Course</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={values.course}
-                    label="Course"
-                    name="course"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    sx={{ gridColumn: "span 4" }}
-                    autoWidth
+                  <FormControl
+                    sx={{ mt: 1, minWidth: 150 }}
+                    error={!!touched.course && !!errors.course}
                   >
-                    <MenuItem value="999 Offer">999 Offer</MenuItem>
-                    <MenuItem value="MERN">MERN</MenuItem>
-                    <MenuItem value="Python">Python</MenuItem>
-                  </Select>
-                  <FormHelperText>
-                    {touched.course && errors.course}
-                  </FormHelperText>{" "}
-                  {/* Display error here */}
-                </FormControl>
-                <FormControl
-                  sx={{ mt: 1, minWidth: 120 }}
-                  error={!!touched.status && !!errors.status}
-                >
-                  <InputLabel id="demo-simple-select-autowidth-label">
-                    Status
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    value={values.status}
-                    label="Status"
-                    name="status"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    sx={{ gridColumn: "span 4" }}
-                    autoWidth
+                    <InputLabel id="course-select-label">Course</InputLabel>
+                    <Select
+                      labelId="course-select-label"
+                      id="course-select"
+                      value={values.course}
+                      label="Course"
+                      name="course"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      autoWidth
+                    >
+                      <MenuItem value="999 Offer">999 Offer</MenuItem>
+                      <MenuItem value="MERN">MERN</MenuItem>
+                      <MenuItem value="Python">Python</MenuItem>
+                    </Select>
+                    <FormHelperText>
+                      {touched.course && errors.course}
+                    </FormHelperText>
+                  </FormControl>
+  
+                  <FormControl
+                    sx={{ mt: 1, minWidth: 120 }}
+                    error={!!touched.status && !!errors.status}
                   >
-                    <MenuItem value="Pending">Pending</MenuItem>
-                    <MenuItem value="Purchased">Purchased</MenuItem>
-                    <MenuItem value="Follow Up">Follow Up</MenuItem>
-                  </Select>
-                  <FormHelperText>
-                    {touched.status && errors.status}
-                  </FormHelperText>{" "}
-                  {/* Display error here */}
-                </FormControl>
+                    <InputLabel id="status-select-label">Status</InputLabel>
+                    <Select
+                      labelId="status-select-label"
+                      id="status-select"
+                      value={values.status}
+                      label="Status"
+                      name="status"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      autoWidth
+                    >
+                      <MenuItem value="Pending">Pending</MenuItem>
+                      <MenuItem value="Purchased">Purchased</MenuItem>
+                      <MenuItem value="Follow Up">Follow Up</MenuItem>
+                    </Select>
+                    <FormHelperText>
+                      {touched.status && errors.status}
+                    </FormHelperText>
+                  </FormControl>
+                </Box>
+  
+                <TextField
+                  fullWidth
+                  type="remarks"
+                  label="Remarks"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.remarks}
+                  name="remarks"
+                  error={!!touched.remarks && !!errors.remarks}
+                  helperText={touched.remarks && errors.remarks}
+                  sx={{ gridColumn: "span 4" }}
+                />
               </Box>
-              <TextField
-                fullWidth
-                type="remarks"
-                label="Remarks"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.remarks}
-                name="remarks"
-                error={!!touched.remarks && !!errors.remarks}
-                helperText={touched.remarks && errors.remarks}
-                sx={{ gridColumn: "span 4" }}
-              />
-            </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Save
-              </Button>
-            </Box>
-          </form>
-        )}
-      </Formik>
-    </Box>
+              <Box display="flex" justifyContent="end" mt="20px">
+                <Button type="submit" color="secondary" variant="contained">
+                  Save
+                </Button>
+              </Box>
+            </form>
+          )}
+        </Formik>
+      </Box>
   );
 };
 
@@ -200,4 +202,4 @@ const initialValues = {
   remarks: "",
 };
 
-export default Hero;
+export default Form;

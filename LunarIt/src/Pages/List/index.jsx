@@ -14,8 +14,9 @@ const Student = () => {
     const getStudents = async () => {
       try {
         const studentsData = await fetchStudents();
-        const data = studentsData.map((ele) => ({
+        const data = studentsData.map((ele, i) => ({
           id: ele._id,
+          rank:i+1,
           ...ele,
         }));
         setTeam(data);
