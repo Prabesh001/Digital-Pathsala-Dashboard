@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { fetchStudentsByEmail } from "../../Js";
+import { fetchAdminByEmail } from "../../Js";
 import { ToastContainer, toast } from "react-toastify";
 import bcrypt from "bcryptjs";
 
@@ -26,7 +26,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
     setError(false);
 
     try {
-      const data = await fetchStudentsByEmail(formData.email);
+      const data = await fetchAdminByEmail(formData.email);
 
       if (!data || data.length === 0) {
         toast.error("No User Found!");
@@ -34,7 +34,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
         return;
       }
 
-      const user = data[0]; // Assuming data is an array
+      const user = data[0];
       const isPasswordMatch = await bcrypt.compare(formData.password, data.password);
 
       if (isPasswordMatch) {

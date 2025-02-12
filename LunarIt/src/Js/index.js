@@ -1,32 +1,12 @@
 import axios from "axios";
-const url = "http://localhost:5000/students";
+const student_url = "http://localhost:5000/students";
 const admin_url = "http://localhost:5000/admin";
+const email_url = "http://localhost:5000/api/send-emails";
 
-export const insertStudent = async (mappedValues) => {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(mappedValues),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to create student");
-    }
-
-    return await response.json();
-  } catch (err) {
-    console.error("Error:", err);
-    throw err;
-  }
-};
 
 export const fetchStudents = async () => {
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(student_url);
     if (response.status !== 200) {
       throw new Error(`Unexpected response status: ${response.status}`);
     }
@@ -37,7 +17,34 @@ export const fetchStudents = async () => {
   }
 };
 
-export const fetchStudentsByEmail = async (email) => {
+export const insertStudent = async (mappedValues) => {
+  try {
+    const response = await axios.post(student_url, mappedValues, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+export const deleteStudents = async (id) => {
+  try {
+    const response = await axios.delete(`${student_url}/${id}`);
+
+    if (response.status !== 200) {
+      throw new Error("Failed to delete item");
+    }
+  } catch (error) {
+    console.error("Error deleting item", error);
+  }
+};
+
+export const fetchAdminByEmail = async (email) => {
   try {
     const response = await axios.get(`${admin_url}/${email}`);
 
@@ -52,35 +59,25 @@ export const fetchStudentsByEmail = async (email) => {
   }
 };
 
-export const deleteStudents = async (id) => {
+export const sendEmails = async (emails) => {
   try {
-    const response = await fetch(
-      `${url}/${id}`,
+    const response = await axios.post(
+      email_url,
+      { emails },
       {
-        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete item");
+    if (response.status !== 200) {
+      throw new Error(response.data.message || "Failed to send emails");
     }
-  } catch (error) {
-    console.error("Error deleting item");
 
+    return response.data;
+  } catch (err) {
+    console.error("Error sending emails:", err);
+    throw err;
   }
-};
-
-export const sendEmails = async (emails) => {
-  const response = await fetch('/api/send-emails', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ emails }),
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || 'Failed to send emails');
-  }
-  return data;
 };

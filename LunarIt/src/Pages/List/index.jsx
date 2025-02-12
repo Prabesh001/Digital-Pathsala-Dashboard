@@ -25,14 +25,16 @@ const Student = () => {
       }
     };
     getStudents();
-  }, [team]);
+  }, []);
 
   const handleDelete = async () => {
     try {
-      await deleteStudents(selectedRows);
+      for (const id of selectedRows) {
+        await deleteStudents(id);
+      }
       toast.success("Students deleted successfully!");
       setSelectedRows([]);
-      setTeam(team);
+      setTeam(team.filter((student) => !selectedRows.includes(student.id)));
     } catch (err) {
       toast.error("Delete failed: " + err.message);
     }
@@ -40,22 +42,12 @@ const Student = () => {
 
   const handleSendEmail = async () => {
     try {
-      const selectedStudents = team.filter(student => 
+      const selectedStudents = team.filter(student =>
         selectedRows.includes(student.id)
       );
       const emails = selectedStudents.map(student => student.email);
       
-      const response = await fetch("http://localhost:5000/api/send-emails", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emails }),
-      });
-  
-      if (!response.ok) throw new Error("Request failed");
-      
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : {};
-      
+      const data = await sendEmails(emails);
       toast.success(data.message || "Emails sent!");
       setSelectedRows([]);
     } catch (err) {

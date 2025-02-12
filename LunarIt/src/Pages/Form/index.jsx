@@ -14,7 +14,6 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { toast, ToastContainer } from "react-toastify";
 import { insertStudent } from "../../Js/index";
-import { useAuth0 } from "@auth0/auth0-react";
 
 const Hero = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");

@@ -24,6 +24,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    localStorage.clear();
     navigate("/");
   };
 
