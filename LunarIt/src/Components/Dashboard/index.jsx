@@ -46,7 +46,15 @@ const Dashboard = ({ setIsAuthenticated }) => {
         className={`fixed left-0 top-0 h-full w-64 bg-gray-800 transition-transform duration-300 
           ${showSidebar ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="flex items-center justify-center h-16 bg-gray-900">
+        <div
+          onClick={() => navigate("/home")}
+          className="flex items-center justify-center h-16 bg-gray-900 cursor-pointer"
+        >
+          <img
+            src="https://pps.whatsapp.net/v/t61.24694-24/473399879_1135208531537657_5628410588546111998_n.jpg?stp=dst-jpg_s96x96_tt6&ccb=11-4&oh=01_Q5AaIClSSxNPpkx0yaphd6ITfy84lmFYiGRGb7h-0dL1h74S&oe=67B6C01D&_nc_sid=5e03e0&_nc_cat=102"
+            alt="DP"
+            className="h-12 rounded-3xl mr-2"
+          />
           <span className="text-white font-bold uppercase">
             Digital Pathshala
           </span>
@@ -106,19 +114,19 @@ const Dashboard = ({ setIsAuthenticated }) => {
           <div className="flex items-center pr-4">
             <button
               onClick={handleLogout}
-              className="select-none flex transition-all duration-200 items-center border-2 text-gray-500 hover:bg-red-600 hover:text-white rounded-3xl pt-1 pb-1 pl-3 pr-3"
+              className="select-none flex transition-all duration-200 items-center border-2 text-gray-500 hover:bg-red-600 hover:text-white rounded-3xl px-4 py-2 hover:border-gray-500"
             >
               Logout
             </button>
           </div>
         </div>
 
-          <Routes>
-            <Route path="/home" element={<Home />} />
-            <Route path="/form" element={<Form />} />
-            <Route path="/students" element={<List />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/form" element={<Form />} />
+          <Route path="/students" element={<List />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </div>
     </div>
   );
