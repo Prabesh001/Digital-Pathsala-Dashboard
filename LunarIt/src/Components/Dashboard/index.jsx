@@ -6,8 +6,13 @@ import { dashboardComponents } from "../../Js/data";
 import SVG from "../../Template/SVG";
 import useLocalStorage from "../../Template/useLocalStorage";
 import Home from "../../Pages/Home";
+import Popup from "../../Template/Popup";
+
+export const DemoContext = createContext()
 
 const Dashboard = ({ setIsAuthenticated }) => {
+  const [popupVisibility, setPopupVisiblilty] = useState(false);
+
   const [showSidebar, setShowSidebar] = useState(window.innerWidth > 800);
   const [selectedIndex, setSelectedIndex] = useLocalStorage(
     "selected-index",
@@ -42,6 +47,14 @@ const Dashboard = ({ setIsAuthenticated }) => {
 
   return (
     <div className="flex bg-gray-100" style={{ minHeight: "100vh" }}>
+      {popupVisibility && (
+        <Popup
+          greeting="Logout"
+          message="Are you sure you want to Logout?!"
+          closePopup={() => setPopupVisiblilty(!popupVisibility)}
+          fnBtn={handleLogout}
+        />
+      )}
       <div
         className={`fixed left-0 top-0 h-full w-64 bg-gray-800 transition-transform duration-300 
           ${showSidebar ? "translate-x-0" : "-translate-x-full"}`}
@@ -113,7 +126,8 @@ const Dashboard = ({ setIsAuthenticated }) => {
           </div>
           <div className="flex items-center pr-4">
             <button
-              onClick={handleLogout}
+              // onClick={handleLogout}
+              onClick={() => setPopupVisiblilty(true)}
               className="select-none flex transition-all duration-200 items-center border-2 text-gray-500 hover:bg-red-600 hover:text-white rounded-3xl px-4 py-2 hover:border-gray-500"
             >
               Logout
