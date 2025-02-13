@@ -23,8 +23,8 @@ POST http://localhost:5000/students
 content-type: application/json
 {
     "name": "My Name",
-    "email": "prabeshdahal123@gmail.com",
-    "phone": "9804382088",
+    "email": "poiuytr@gmail.com",
+    "phone": "9800000000",
     "course": "999 Offer",
     "status": "Pending",
     "date": "11/02/2025",
