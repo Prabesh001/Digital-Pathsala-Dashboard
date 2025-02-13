@@ -12,25 +12,19 @@ import {
 import Popup from "../../Template/Popup";
 import { ToastContainer, toast } from "react-toastify";
 import { DigitalContext } from "../../Components/Dashboard";
+import { MdUpdate } from "react-icons/md";
 
 const Student = () => {
   const [team, setTeam] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const { popupVisibility, setPopupVisiblilty } = useContext(DigitalContext);
-
-  const updateStatus = async () => {
-    try {
-      for (const id of selectedRows) {
-        await updateStudentStatus(id);
-      }
-      toast.success("Students Status updated successfully!");
-      setSelectedRows([]);
-    } catch (err) {
-      toast.error("Update failed: " + err.message);
-    }
-  };
+  const [updateRow, setUpdateRow] = useState([]);
 
   const handleUpdate = () => {
+    const neededRow = team.find(
+      (ele) => ele.id === selectedRows[selectedRows.length - 1]
+    );
+    setUpdateRow(neededRow);
     setPopupVisiblilty("update");
   };
 
@@ -65,6 +59,19 @@ const Student = () => {
     }
   };
 
+  const updateStatus = async () => {
+    try {
+      for (const id of selectedRows) {
+        await updateStudentStatus(id);
+      }
+      toast.success("Students Status updated successfully!");
+      setSelectedRows([]);
+      setTimeout(() => window.location.reload(), 1000);
+    } catch (err) {
+      toast.error("Update failed: " + err.message);
+    }
+  };
+
   const handleSendEmail = async () => {
     try {
       const selectedStudents = team.filter((student) =>
@@ -85,21 +92,38 @@ const Student = () => {
       <ToastContainer />
       {popupVisibility === "update" ? (
         <Popup
-          greeting="Update Student's Info"
+          icon={<MdUpdate />}
+          greeting="Update"
+          gs={"text-green-600"}
           message={
             <form className="flex flex-col gap-2 mt-3 text-[18px]">
-              <input type="text" className="border-1 p-1" />
-              <input type="text" className="border-1 p-1" />
-              <select className="border-1 p-1" name="hlo">
-                <option value="Select your value" selected disabled>Select your value</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500"
+                placeholder="Email"
+                value={updateRow.email}
+                readOnly
+              />
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500"
+                placeholder="Phone no."
+                readOnly
+                value={updateRow.phone}
+              />
+              <select
+                className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500 px-2"
+                name="tech"
+                defaultValue={updateRow.course}
+              >
+                <option value="MERN">MERN</option>
+                <option value="999 Offer">999 Offer</option>
+                <option value="Python">Python</option>
               </select>
             </form>
           }
           fnBtn={
-            <button className="bg-green-600 px-3 text-white rounded-[5px]">
+            <button className="border-2 hover:bg-green-600 border-green-600 bg-green-700 transition-all duration-300 px-3 py-1 text-white rounded-[5px]">
               Update
             </button>
           }
@@ -161,11 +185,17 @@ const Student = () => {
           pageSizeOptions={[25]}
         />
       </Box>
-      <Box display="flex" justifyContent="end" mt="20px" gap={1}>
+      <Box
+        display="flex"
+        flexWrap={"wrap"}
+        justifyContent="end"
+        mt="20px"
+        gap={1}
+      >
         <Button
           color="primary"
           variant="outlined"
-          sx={{ mb: "20px" }}
+          sx={{ mb: "8px", minWidth: "94px" }}
           onClick={handleUpdate}
           disabled={selectedRows.length === 0}
         >
@@ -175,7 +205,7 @@ const Student = () => {
         <Button
           color="primary"
           variant="contained"
-          sx={{ mb: "20px" }}
+          sx={{ mb: "8px", minWidth: "94px" }}
           onClick={handleSendEmail}
           disabled={selectedRows.length === 0}
         >
@@ -186,7 +216,7 @@ const Student = () => {
           color="secondary"
           variant="contained"
           onClick={handleDelete}
-          sx={{ mb: "20px" }}
+          sx={{ mb: "8px", minWidth: "94px" }}
           disabled={selectedRows.length === 0}
         >
           Delete Selected ({selectedRows.length})

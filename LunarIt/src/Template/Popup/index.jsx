@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./popup.css";
 
-function Popup({ greeting, message, fnBtn, closePopup }) {
+function Popup({ greeting, message, fnBtn, closePopup, icon, gs }) {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -21,16 +21,10 @@ function Popup({ greeting, message, fnBtn, closePopup }) {
         className="popup-window flex-col items-center justify-center"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="font-bold text-2xl text-red-600">{greeting}</h2>
-        <div className="popup-message ">{message}</div>
-        <div className="flex justify-end gap-2 mt-3">
+        <div className={`flex justify-center items-end gap-2 font-bold text-3xl ${gs}`}>{icon} {greeting}</div>
+        <div className="popup-message m-2 text-[1.15rem] text-gray-800">{message}</div>
+        <div className="flex flex-wrap justify-end items-center gap-2 mt-3">
           {fnBtn}
-          {/* <button
-            className="py-1 px-4 bg-red-600 text-white rounded-[8px]"
-            onClick={fnBtn}
-          >
-            Logout
-          </button> */}
           <button
             className="border-2 py-1 px-2 rounded-[8px]"
             onClick={closePopup}

@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Home from "../../Pages/Home";
 import Error from "../../Pages/Error";
 import Form from "../../Pages/Form";
@@ -8,31 +8,42 @@ import SVG from "../../Template/SVG";
 import useLocalStorage from "../../Template/useLocalStorage";
 import Popup from "../../Template/Popup";
 import { dashboardComponents } from "../../Js/data";
+import { MdLogout } from "react-icons/md";
 
 export const DigitalContext = createContext();
 
 const Dashboard = ({ setIsAuthenticated }) => {
-  const [popupVisibility, setPopupVisiblilty] = useState("");
-
-  const [showSidebar, setShowSidebar] = useState(window.innerWidth > 800);
-  const [selectedIndex, setSelectedIndex] = useLocalStorage(
-    "selected-index",
-    "Form"
-  );
-  const [disableBtn, setDisableBtn] = useState(false);
-
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const [disableBtn, setDisableBtn] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(window.innerWidth > 900);
+  const [popupVisibility, setPopupVisiblilty] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useLocalStorage( "selected-index", "Form" );
+
+  useEffect(() => {
+    const { pathname } = location;
+    const myIndex = dashboardComponents.find(
+      (nav) =>
+        nav.label.toLowerCase() === pathname.replace("/", "").toLowerCase()
+    );
+    if (myIndex) {
+      setSelectedIndex(myIndex.label);
+    } else {
+      setSelectedIndex(null);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleResize = () => {
-      setShowSidebar(window.innerWidth > 800);
+      setShowSidebar(window.innerWidth > 900);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    if (window.innerWidth > 800) {
+    if (window.innerWidth > 900) {
       setDisableBtn(true);
     } else {
       setDisableBtn(false);
@@ -50,12 +61,14 @@ const Dashboard = ({ setIsAuthenticated }) => {
     <div className="flex bg-gray-100" style={{ minHeight: "100vh" }}>
       {popupVisibility === "logout" && (
         <Popup
+        gs={"text-red-600"}
+        icon={<MdLogout size={30}/>}
           greeting="Logout"
-          message="Are you sure you want to Logout?!"
+          message="Are you sure you want to Logout?"
           closePopup={() => setPopupVisiblilty("")}
           fnBtn={
             <button
-              className="py-1 px-4 bg-red-600 text-white rounded-[8px]"
+              className="py-1 px-4 border-2 border-red-600 bg-red-600 hover:bg-red-700 text-white rounded-[8px]"
               onClick={handleLogout}
             >
               Logout
@@ -146,13 +159,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
         </div>
 
         <DigitalContext.Provider
-          value={{
-            selectedIndex,
-            setSelectedIndex,
-            popupVisibility,
-            setPopupVisiblilty,
-          }}
-        >
+          value={ {selectedIndex ,setSelectedIndex ,popupVisibility ,setPopupVisiblilty }}>
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/form" element={<Form />} />

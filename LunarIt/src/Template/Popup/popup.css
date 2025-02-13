@@ -12,8 +12,8 @@
   z-index: 1000;
 }
 .popup-window{
-  height: 50px 500px;
-  width: 300px 500px;
+  height: max-content;
+  width: max-content;
   background-color: white;
   padding: 20px 50px;
   border-radius: 8px;
