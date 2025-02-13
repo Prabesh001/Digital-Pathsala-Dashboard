@@ -1,12 +1,12 @@
 import React, { createContext, useEffect, useState } from "react";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import Home from "../../Pages/Home";
 import Form from "../../Pages/Form";
 import List from "../../Pages/List";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
-import { dashboardComponents } from "../../Js/data";
 import SVG from "../../Template/SVG";
 import useLocalStorage from "../../Template/useLocalStorage";
-import Home from "../../Pages/Home";
 import Popup from "../../Template/Popup";
+import { dashboardComponents } from "../../Js/data";
 
 export const DemoContext = createContext()
 
@@ -126,7 +126,6 @@ const Dashboard = ({ setIsAuthenticated }) => {
           </div>
           <div className="flex items-center pr-4">
             <button
-              // onClick={handleLogout}
               onClick={() => setPopupVisiblilty(true)}
               className="select-none flex transition-all duration-200 items-center border-2 text-gray-500 hover:bg-red-600 hover:text-white rounded-3xl px-4 py-2 hover:border-gray-500"
             >
@@ -139,7 +138,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
           <Route path="/home" element={<Home />} />
           <Route path="/form" element={<Form />} />
           <Route path="/students" element={<List />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>
     </div>

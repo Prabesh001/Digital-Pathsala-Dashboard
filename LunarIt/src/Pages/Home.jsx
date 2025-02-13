@@ -90,7 +90,7 @@ const Home = () => {
       style={{ minHeight: "90.8vh" }}
     >
       <ToastContainer />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:py-24 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:py-4 lg:px-8">
         <h2
           className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl dark:text-white"
           style={{ textShadow: "0px 1px gray" }}

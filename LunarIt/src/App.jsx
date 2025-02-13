@@ -6,20 +6,17 @@ import ProtectedRoute from "./Template/ProtectedRoute";
 import useLocalStorage from "./Template/useLocalStorage";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useLocalStorage("isAuthenticated", false);
+  const [isAuthenticated, setIsAuthenticated] = useLocalStorage(
+    "isAuthenticated",
+    false
+  );
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
-          element={
-            isAuthenticated ? (
-              <Navigate to="/form" replace />
-            ) : (
-              <Login setIsAuthenticated={setIsAuthenticated} />
-            )
-          }
+          element={<Login setIsAuthenticated={setIsAuthenticated} />}
         />
         <Route
           path="/*"

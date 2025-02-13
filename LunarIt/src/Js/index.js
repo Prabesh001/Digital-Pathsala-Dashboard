@@ -1,6 +1,6 @@
 import axios from "axios";
-const student_url = "http://localhost:5000/students";
-const admin_url = "http://localhost:5000/admin";
+const student_url = "http://localhost:5000/api/students";
+const admin_url = "http://localhost:5000/api/admin/login";
 const email_url = "http://localhost:5000/api/send-emails";
 
 
@@ -44,21 +44,6 @@ export const deleteStudents = async (id) => {
   }
 };
 
-export const fetchAdminByEmail = async (email) => {
-  try {
-    const response = await axios.get(`${admin_url}/${email}`);
-
-    if (response.status !== 200) {
-      throw new Error(`Unexpected response status: ${response.status}`);
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    return null;
-  }
-};
-
 export const sendEmails = async (emails) => {
   try {
     const response = await axios.post(
@@ -79,5 +64,16 @@ export const sendEmails = async (emails) => {
   } catch (err) {
     console.error("Error sending emails:", err);
     throw err;
+  }
+};
+
+export const loginAdmin = async (email, password) => {
+  try {
+    const response = await axios.post(`${admin_url}`, { email, password });
+
+    return response.data;
+  } catch (error) {
+    console.error("Login error:", error);
+    return { error: error.response?.data?.error || "Login failed" };
   }
 };

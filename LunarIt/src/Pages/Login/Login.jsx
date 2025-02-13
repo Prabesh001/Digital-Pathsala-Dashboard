@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { fetchAdminByEmail } from "../../Js";
+import { loginAdmin } from "../../Js";
 import { ToastContainer, toast } from "react-toastify";
-import bcrypt from "bcryptjs";
 
 const LoginPage = ({ setIsAuthenticated }) => {
   const [loading, setLoading] = useState(false);
@@ -26,29 +25,19 @@ const LoginPage = ({ setIsAuthenticated }) => {
     setError(false);
 
     try {
-      const data = await fetchAdminByEmail(formData.email);
+      const response = await loginAdmin(formData.email, formData.password);
 
-      if (!data || data.length === 0) {
-        toast.error("No User Found!");
-        setLoading(false);
-        return;
-      }
-
-      const user = data[0];
-      const isPasswordMatch = await bcrypt.compare(formData.password, data.password);
-
-      if (isPasswordMatch) {
+      if (response.error) {
+        toast.error(response.error);
+        setError(true);
+      } else {
         toast.success("Login Successful!");
         setIsAuthenticated(true);
-        navigate("/dashboard");
-      } else {
-        setError(true);
-        toast.error("Incorrect Email or Password.");
+        navigate("/home");
       }
     } catch (error) {
-      setError(true);
-      setFormData({ email: "", password: "" });
-      console.error("Error fetching user:", error);
+      toast.error("Something went wrong.");
+      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }
@@ -71,11 +60,20 @@ const LoginPage = ({ setIsAuthenticated }) => {
             className={error ? "input error-input" : "input"}
             required
           />
-          <p className="error-msg">{error ? "*Check your email properly" : ""}</p>
+          <p className="error-msg">
+            {error ? "*Check your email properly" : ""}
+          </p>
 
           <div className="password-field">
-            <div className="eye-field" onClick={() => setShowPassword(!showPassword)}>
-              {!showPassword ? <RemoveRedEyeOutlinedIcon /> : <VisibilityOffOutlinedIcon />}
+            <div
+              className="eye-field"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {!showPassword ? (
+                <RemoveRedEyeOutlinedIcon />
+              ) : (
+                <VisibilityOffOutlinedIcon />
+              )}
             </div>
             <input
               type={showPassword ? "text" : "password"}
@@ -88,7 +86,9 @@ const LoginPage = ({ setIsAuthenticated }) => {
               required
             />
           </div>
-          <p className="error-msg">{error ? "*Check your password properly" : ""}</p>
+          <p className="error-msg">
+            {error ? "*Check your password properly" : ""}
+          </p>
 
           <button type="submit" className="login-button">
             {loading ? <CircularProgress size={12} color="white" /> : "Login"}

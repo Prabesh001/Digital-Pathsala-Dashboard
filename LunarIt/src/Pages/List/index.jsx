@@ -16,7 +16,7 @@ const Student = () => {
         const studentsData = await fetchStudents();
         const data = studentsData.map((ele, i) => ({
           id: ele._id,
-          rank:i+1,
+          rank: i + 1,
           ...ele,
         }));
         setTeam(data);
@@ -43,11 +43,11 @@ const Student = () => {
 
   const handleSendEmail = async () => {
     try {
-      const selectedStudents = team.filter(student =>
+      const selectedStudents = team.filter((student) =>
         selectedRows.includes(student.id)
       );
-      const emails = selectedStudents.map(student => student.email);
-      
+      const emails = selectedStudents.map((student) => student.email);
+
       const data = await sendEmails(emails);
       toast.success(data.message || "Emails sent!");
       setSelectedRows([]);
@@ -60,7 +60,7 @@ const Student = () => {
     <Box m="20px">
       <ToastContainer />
       <Box
-        height="70vh"
+        maxHeight="74.3vh"
         sx={{
           "& .MuiDataGrid-root": { border: "none" },
           "& .MuiDataGrid-cell": { borderBottom: "none" },
@@ -73,6 +73,14 @@ const Student = () => {
           rows={team}
           columns={columns}
           checkboxSelection
+          sx={{
+            boxShadow:"1px 0 3px lightgray, -1px 0 3px lightgray",
+            "& .MuiDataGrid-columnHeaders": {
+              fontSize: "16px",
+              fontWeight: "bold",
+              border: "1px solid lightgray",
+            },
+          }}
           slots={{
             toolbar: GridToolbar,
           }}
@@ -94,6 +102,14 @@ const Student = () => {
           onRowSelectionModelChange={(newSelection) => {
             setSelectedRows(newSelection);
           }}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
+              },
+            },
+          }}
+          pageSizeOptions={[10]}
         />
       </Box>
       <Box display="flex" justifyContent="end" mt="20px" gap={1}>

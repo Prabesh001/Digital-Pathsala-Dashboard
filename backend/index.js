@@ -6,19 +6,19 @@ const mongoose = require("mongoose");
 const Port = process.env.PORT;
 const { Student, Admin } = require("./Schema/schema");
 const bcrypt = require("bcryptjs");
-const emailRoutes = require("./email/emailRoutes")
+const emailRoutes = require("./email/emailRoutes");
 
 app.use(express.json());
 app.use(cors());
 
 mongoose
-.connect(process.env.MONGO_URI)
-.then(() => console.log("Connected to MongoDB Atlas"))
-.catch((err) => console.error("Failed to connect to MongoDB Atlas:", err));
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("Connected to MongoDB Atlas"))
+  .catch((err) => console.error("Failed to connect to MongoDB Atlas:", err));
 
 app.use("/api", emailRoutes);
 
-app.get("/students", async (req, res) => {
+app.get("/api/students", async (req, res) => {
   try {
     const students = await Student.find();
     res.json(students);
@@ -28,7 +28,7 @@ app.get("/students", async (req, res) => {
 });
 
 app
-  .route("/students/:id")
+  .route("/api/students/:id")
   .get(async (req, res) => {
     try {
       const _id = req.params.id;
@@ -74,7 +74,7 @@ app
     }
   });
 
-app.post("/students", async (req, res) => {
+app.post("/api/students", async (req, res) => {
   try {
     const { name, email, phone, course, status, date, remarks } = req.body;
     if (!email || !phone || !course || !status || !date || !remarks) {
@@ -100,7 +100,7 @@ app.post("/students", async (req, res) => {
 });
 
 //Admin
-app.post("/admin", async (req, res) => {
+app.post("/api/admin", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -125,7 +125,7 @@ app.post("/admin", async (req, res) => {
   }
 });
 
-app.get("/admin", async (req, res) => {
+app.get("/api/admin", async (req, res) => {
   try {
     const admin = await Admin.find();
     res.json(admin);
@@ -134,30 +134,57 @@ app.get("/admin", async (req, res) => {
   }
 });
 
-app.route("/admin/:email")
-.get(async (req, res) => {
+app
+  .route("/api/admin/:email")
+  .get(async (req, res) => {
+    try {
+      const { email } = req.params;
+      const admin = await Admin.findOne({ email: email });
+      if (!admin) {
+        return res.status(404).json({ message: "Admin not found" });
+      }
+      res.json(admin);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      const { email } = req.params;
+      const deleteId = await Admin.findOneAndDelete({ email: email });
+
+      if (!deleteId) {
+        return res.status(404).json({ message: "Admin not found" });
+      }
+
+      res.json({ message: "Deleted Admin:", deleteId });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+//login 
+
+app.post("/api/admin/login", async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email } = req.params;
-    const admin = await Admin.findOne({ email: email });
+    const admin = await Admin.findOne({ email });
+
     if (!admin) {
-      return res.status(404).json({ message: "Admin not found" });
-    }
-    res.json(admin);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-}).delete(async (req, res) => {
-  try {
-    const {email} = req.params;
-    const deleteId = await Admin.findOneAndDelete({ email: email });
-
-    if (!deleteId) {
-      return res.status(404).json({ message: "Admin not found" });
+      return res.status(404).json({ error: "No user found!" });
     }
 
-    res.json({ message: "Deleted Admin:", deleteId });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const isMatch = await bcrypt.compare(password, admin.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ error: "Incorrect email or password" });
+    }
+
+    res.json({ message: "Login successful!", admin });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
