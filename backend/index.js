@@ -195,7 +195,6 @@ const getMail = async () => {
     const students = await Student.find({ status: { $ne: "Purchased" } });
 
     if (!students.length) {
-      console.log("No students found.");
       return [];
     }
 
@@ -207,14 +206,12 @@ const getMail = async () => {
 };
 
 const rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = 4;
-rule.hour = 20;
-rule.minute = 20;
-rule.second = 50;
+rule.dayOfWeek = 6;
+rule.hour = 18;
+rule.minute = 0;
+rule.second = 0;
 
 const job = schedule.scheduleJob(rule, async () => {
-  console.log("Sending Emails at 5 pm on Sunday");
-
   try {
     const emails = await getMail();
 

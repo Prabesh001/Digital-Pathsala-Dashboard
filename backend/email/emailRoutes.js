@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const transporter = require("./emailSender.js");
@@ -39,8 +38,6 @@ router.post("/send-emails", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error sending emails: " + error.message });
   }
-
-  console.log(req.body);
 });
 
 module.exports = router;

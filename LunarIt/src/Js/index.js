@@ -46,7 +46,6 @@ export const deleteStudents = async (id) => {
 export const sendEmails = async (emails) => {
   try {
     if (!emails.length) {
-      console.log("No emails to send.");
       return;
     }
     const response = await axios.post(
