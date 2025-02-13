@@ -1,19 +1,13 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./popup.css";
-import { DigitalContext } from "../../App";
 
-function Popup({ greeting, message, fnBtn }) {
-  const { popupVisibility, setPopupVisiblilty } = useContext(DigitalContext);
+function Popup({ greeting, message, fnBtn, closePopup }) {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, []);
-
-  const closePopup = () => {
-    setPopupVisiblilty(!popupVisibility);
-  };
 
   const handleOverlayClick = (event) => {
     if (event.target.classList.contains("popup-overlay")) {

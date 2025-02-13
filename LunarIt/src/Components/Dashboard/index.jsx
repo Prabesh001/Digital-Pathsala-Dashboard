@@ -12,7 +12,7 @@ import { dashboardComponents } from "../../Js/data";
 export const DigitalContext = createContext();
 
 const Dashboard = ({ setIsAuthenticated }) => {
-  const [popupVisibility, setPopupVisiblilty] = useState(false);
+  const [popupVisibility, setPopupVisiblilty] = useState("");
 
   const [showSidebar, setShowSidebar] = useState(window.innerWidth > 800);
   const [selectedIndex, setSelectedIndex] = useLocalStorage(
@@ -48,12 +48,19 @@ const Dashboard = ({ setIsAuthenticated }) => {
 
   return (
     <div className="flex bg-gray-100" style={{ minHeight: "100vh" }}>
-      {popupVisibility && (
+      {popupVisibility === "logout" && (
         <Popup
           greeting="Logout"
           message="Are you sure you want to Logout?!"
-          closePopup={() => setPopupVisiblilty(!popupVisibility)}
-          fnBtn={handleLogout}
+          closePopup={() => setPopupVisiblilty("")}
+          fnBtn={
+            <button
+              className="py-1 px-4 bg-red-600 text-white rounded-[8px]"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          }
         />
       )}
       <div
@@ -130,7 +137,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
           </div>
           <div className="flex items-center pr-4">
             <button
-              onClick={() => setPopupVisiblilty(true)}
+              onClick={() => setPopupVisiblilty("logout")}
               className="select-none flex transition-all duration-200 items-center border-2 text-gray-500 hover:bg-red-600 hover:text-white rounded-3xl px-4 py-2 hover:border-gray-500"
             >
               Logout
@@ -138,7 +145,14 @@ const Dashboard = ({ setIsAuthenticated }) => {
           </div>
         </div>
 
-        <DigitalContext.Provider value={{ selectedIndex, setSelectedIndex }}>
+        <DigitalContext.Provider
+          value={{
+            selectedIndex,
+            setSelectedIndex,
+            popupVisibility,
+            setPopupVisiblilty,
+          }}
+        >
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/form" element={<Form />} />

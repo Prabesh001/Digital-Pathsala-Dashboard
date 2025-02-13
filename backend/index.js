@@ -7,6 +7,8 @@ const Port = process.env.PORT;
 const { Student, Admin } = require("./Schema/schema");
 const bcrypt = require("bcryptjs");
 const emailRoutes = require("./email/emailRoutes");
+const schedule = require("node-schedule");
+const sendEmails = require("./email/scheduledEmail");
 
 app.use(express.json());
 app.use(cors());
@@ -163,7 +165,7 @@ app
     }
   });
 
-//login 
+//login
 app.post("/api/admin/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -184,6 +186,45 @@ app.post("/api/admin/login", async (req, res) => {
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+//Send mail at 5pm every Saturday
+const getMail = async () => {
+  try {
+    const students = await Student.find({ status: { $ne: "Purchased" } });
+
+    if (!students.length) {
+      console.log("No students found.");
+      return [];
+    }
+
+    return students.map((student) => student.email);
+  } catch (err) {
+    console.log("Error fetching emails:", err);
+    return [];
+  }
+};
+
+const rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = 4;
+rule.hour = 20;
+rule.minute = 20;
+rule.second = 50;
+
+const job = schedule.scheduleJob(rule, async () => {
+  console.log("Sending Emails at 5 pm on Sunday");
+
+  try {
+    const emails = await getMail();
+
+    if (emails.length > 0) {
+      await sendEmails(emails);
+    } else {
+      console.log("No emails to send.");
+    }
+  } catch (err) {
+    console.log("Error:", err.message);
   }
 });
 

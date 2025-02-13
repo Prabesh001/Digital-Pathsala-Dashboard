@@ -45,6 +45,10 @@ export const deleteStudents = async (id) => {
 
 export const sendEmails = async (emails) => {
   try {
+    if (!emails.length) {
+      console.log("No emails to send.");
+      return;
+    }
     const response = await axios.post(
       email_url,
       { emails },
@@ -58,7 +62,7 @@ export const sendEmails = async (emails) => {
     if (response.status !== 200) {
       throw new Error(response.data.message || "Failed to send emails");
     }
-    
+
     return response.data;
   } catch (err) {
     console.error("Error sending emails:", err);
@@ -79,7 +83,7 @@ export const loginAdmin = async (email, password) => {
 
 export const updateStudentStatus = async (id) => {
   try {
-    const updatedValue = {status: "Purchased"}
+    const updatedValue = { status: "Purchased" };
     const response = await axios.patch(`${student_url}/${id}`, updatedValue);
 
     return response.data;

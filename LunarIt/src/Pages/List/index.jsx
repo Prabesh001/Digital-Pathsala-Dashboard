@@ -11,7 +11,7 @@ import {
 } from "../../Js/index";
 import Popup from "../../Template/Popup";
 import { ToastContainer, toast } from "react-toastify";
-import { DigitalContext } from "../../App";
+import { DigitalContext } from "../../Components/Dashboard";
 
 const Student = () => {
   const [team, setTeam] = useState([]);
@@ -31,7 +31,7 @@ const Student = () => {
   };
 
   const handleUpdate = () => {
-    setPopupVisiblilty(true);
+    setPopupVisiblilty("update");
   };
 
   useEffect(() => {
@@ -83,6 +83,29 @@ const Student = () => {
   return (
     <Box m="20px">
       <ToastContainer />
+      {popupVisibility === "update" ? (
+        <Popup
+          greeting="Update Student's Info"
+          message={
+            <form className="flex flex-col gap-2 mt-3 text-[18px]">
+              <input type="text" className="border-1 p-1" />
+              <input type="text" className="border-1 p-1" />
+              <select className="border-1 p-1" name="hlo">
+                <option value="Select your value" selected disabled>Select your value</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </form>
+          }
+          fnBtn={
+            <button className="bg-green-600 px-3 text-white rounded-[5px]">
+              Update
+            </button>
+          }
+          closePopup={() => setPopupVisiblilty("")}
+        />
+      ) : null}
       <Box
         sx={{
           "& .MuiDataGrid-root": { border: "none" },
@@ -143,7 +166,7 @@ const Student = () => {
           color="primary"
           variant="outlined"
           sx={{ mb: "20px" }}
-          onClick={updateStatus}
+          onClick={handleUpdate}
           disabled={selectedRows.length === 0}
         >
           Update to Purchased ({selectedRows.length})
