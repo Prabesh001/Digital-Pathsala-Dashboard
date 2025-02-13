@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { columns } from "../../Js/data";
@@ -9,12 +9,30 @@ import {
   deleteStudents,
   sendEmails,
 } from "../../Js/index";
+import Popup from "../../Template/Popup";
 import { ToastContainer, toast } from "react-toastify";
+import { DigitalContext } from "../../App";
 
 const Student = () => {
   const [team, setTeam] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  console.log(selectedRows);
+  const { popupVisibility, setPopupVisiblilty } = useContext(DigitalContext);
+
+  const updateStatus = async () => {
+    try {
+      for (const id of selectedRows) {
+        await updateStudentStatus(id);
+      }
+      toast.success("Students Status updated successfully!");
+      setSelectedRows([]);
+    } catch (err) {
+      toast.error("Update failed: " + err.message);
+    }
+  };
+
+  const handleUpdate = () => {
+    setPopupVisiblilty(true);
+  };
 
   useEffect(() => {
     const getStudents = async () => {
@@ -55,21 +73,10 @@ const Student = () => {
       const emails = selectedStudents.map((student) => student.email);
 
       const data = await sendEmails(emails);
+      toast.success("Email Sent Sucessfully!");
       setSelectedRows([]);
     } catch (err) {
       toast.error("Failed to send emails: " + err.message);
-    }
-  };
-
-  const updateStatus = async () => {
-    try {
-      for (const id of selectedRows) {
-        await updateStudentStatus(id);
-      }
-      toast.success("Students Status updated successfully!");
-      setSelectedRows([]);
-    } catch (err) {
-      toast.error("Update failed: " + err.message);
     }
   };
 
@@ -124,11 +131,11 @@ const Student = () => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 10,
+                pageSize: 25,
               },
             },
           }}
-          pageSizeOptions={[10]}
+          pageSizeOptions={[25]}
         />
       </Box>
       <Box display="flex" justifyContent="end" mt="20px" gap={1}>

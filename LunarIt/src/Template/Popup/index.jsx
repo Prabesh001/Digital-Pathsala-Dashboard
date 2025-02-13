@@ -1,13 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import "./popup.css";
+import { DigitalContext } from "../../App";
 
-function Popup({ greeting, message, closePopup,fnBtn }) {
+function Popup({ greeting, message, fnBtn }) {
+  const { popupVisibility, setPopupVisiblilty } = useContext(DigitalContext);
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, []);
+
+  const closePopup = () => {
+    setPopupVisiblilty(!popupVisibility);
+  };
 
   const handleOverlayClick = (event) => {
     if (event.target.classList.contains("popup-overlay")) {
@@ -17,14 +23,24 @@ function Popup({ greeting, message, closePopup,fnBtn }) {
 
   return (
     <div className="popup-overlay" onClick={handleOverlayClick}>
-      <div className="popup-window flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="popup-window flex-col items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="font-bold text-2xl text-red-600">{greeting}</h2>
         <div className="popup-message ">{message}</div>
         <div className="flex justify-end gap-2 mt-3">
-          <button className="py-1 px-4 bg-red-600 text-white rounded-[8px]" onClick={fnBtn}>
+          {fnBtn}
+          {/* <button
+            className="py-1 px-4 bg-red-600 text-white rounded-[8px]"
+            onClick={fnBtn}
+          >
             Logout
-          </button>
-          <button className="border-2 py-1 px-2 rounded-[8px]" onClick={closePopup}>
+          </button> */}
+          <button
+            className="border-2 py-1 px-2 rounded-[8px]"
+            onClick={closePopup}
+          >
             Close
           </button>
         </div>

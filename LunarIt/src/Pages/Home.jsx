@@ -89,7 +89,7 @@ const Home = () => {
 
   return (
     <div
-      className={`w-full p-1 pb-4 dark:bg-gray-700`}
+      className={`w-full p-1 pb-4 pt-4 dark:bg-gray-700`}
       style={{ minHeight: "90.8vh" }}
     >
       <ToastContainer />
