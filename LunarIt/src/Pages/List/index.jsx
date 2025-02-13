@@ -3,12 +3,18 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { columns } from "../../Js/data";
 import { Button } from "@mui/material";
-import { fetchStudents, deleteStudents, sendEmails } from "../../Js/index";
+import {
+  updateStudentStatus,
+  fetchStudents,
+  deleteStudents,
+  sendEmails,
+} from "../../Js/index";
 import { ToastContainer, toast } from "react-toastify";
 
 const Student = () => {
   const [team, setTeam] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  console.log(selectedRows);
 
   useEffect(() => {
     const getStudents = async () => {
@@ -49,10 +55,21 @@ const Student = () => {
       const emails = selectedStudents.map((student) => student.email);
 
       const data = await sendEmails(emails);
-      toast.success(data.message || "Emails sent!");
       setSelectedRows([]);
     } catch (err) {
       toast.error("Failed to send emails: " + err.message);
+    }
+  };
+
+  const updateStatus = async () => {
+    try {
+      for (const id of selectedRows) {
+        await updateStudentStatus(id);
+      }
+      toast.success("Students Status updated successfully!");
+      setSelectedRows([]);
+    } catch (err) {
+      toast.error("Update failed: " + err.message);
     }
   };
 
@@ -60,7 +77,6 @@ const Student = () => {
     <Box m="20px">
       <ToastContainer />
       <Box
-        maxHeight="74.3vh"
         sx={{
           "& .MuiDataGrid-root": { border: "none" },
           "& .MuiDataGrid-cell": { borderBottom: "none" },
@@ -74,7 +90,8 @@ const Student = () => {
           columns={columns}
           checkboxSelection
           sx={{
-            boxShadow:"1px 0 3px lightgray, -1px 0 3px lightgray",
+            maxHeight: "74vh",
+            boxShadow: "1px 0 3px lightgray, -1px 0 3px lightgray",
             "& .MuiDataGrid-columnHeaders": {
               fontSize: "16px",
               fontWeight: "bold",
@@ -95,6 +112,8 @@ const Student = () => {
                 "& .MuiButton-root": {
                   color: "black",
                 },
+                "& .MuiInputBase-root": {},
+                "& .MuiFormControl-root": {},
               },
             },
           }}
@@ -113,6 +132,16 @@ const Student = () => {
         />
       </Box>
       <Box display="flex" justifyContent="end" mt="20px" gap={1}>
+        <Button
+          color="primary"
+          variant="outlined"
+          sx={{ mb: "20px" }}
+          onClick={updateStatus}
+          disabled={selectedRows.length === 0}
+        >
+          Update to Purchased ({selectedRows.length})
+        </Button>
+
         <Button
           color="primary"
           variant="contained"

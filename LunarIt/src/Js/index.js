@@ -3,7 +3,6 @@ const student_url = "http://localhost:5000/api/students";
 const admin_url = "http://localhost:5000/api/admin/login";
 const email_url = "http://localhost:5000/api/send-emails";
 
-
 export const fetchStudents = async () => {
   try {
     const response = await axios.get(student_url);
@@ -59,7 +58,7 @@ export const sendEmails = async (emails) => {
     if (response.status !== 200) {
       throw new Error(response.data.message || "Failed to send emails");
     }
-
+    
     return response.data;
   } catch (err) {
     console.error("Error sending emails:", err);
@@ -75,5 +74,17 @@ export const loginAdmin = async (email, password) => {
   } catch (error) {
     console.error("Login error:", error);
     return { error: error.response?.data?.error || "Login failed" };
+  }
+};
+
+export const updateStudentStatus = async (id) => {
+  try {
+    const updatedValue = {status: "Purchased"}
+    const response = await axios.patch(`${student_url}/${id}`, updatedValue);
+
+    return response.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
   }
 };

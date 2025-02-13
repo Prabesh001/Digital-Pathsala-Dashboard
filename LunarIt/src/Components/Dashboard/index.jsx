@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Home from "../../Pages/Home";
+import Error from "../../Pages/Error";
 import Form from "../../Pages/Form";
 import List from "../../Pages/List";
 import SVG from "../../Template/SVG";
@@ -8,7 +9,7 @@ import useLocalStorage from "../../Template/useLocalStorage";
 import Popup from "../../Template/Popup";
 import { dashboardComponents } from "../../Js/data";
 
-export const DemoContext = createContext()
+export const DigitalContext = createContext();
 
 const Dashboard = ({ setIsAuthenticated }) => {
   const [popupVisibility, setPopupVisiblilty] = useState(false);
@@ -60,7 +61,10 @@ const Dashboard = ({ setIsAuthenticated }) => {
           ${showSidebar ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div
-          onClick={() => navigate("/home")}
+          onClick={() => {
+            navigate("/Home");
+            setSelectedIndex("Home");
+          }}
           className="flex items-center justify-center h-16 bg-gray-900 cursor-pointer"
         >
           <img
@@ -134,12 +138,14 @@ const Dashboard = ({ setIsAuthenticated }) => {
           </div>
         </div>
 
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/form" element={<Form />} />
-          <Route path="/students" element={<List />} />
-          <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
+        <DigitalContext.Provider value={{ selectedIndex, setSelectedIndex }}>
+          <Routes>
+            <Route path="/home" element={<Home />} />
+            <Route path="/form" element={<Form />} />
+            <Route path="/students" element={<List />} />
+            <Route path="*" element={<Error />} />
+          </Routes>
+        </DigitalContext.Provider>
       </div>
     </div>
   );

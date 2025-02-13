@@ -72,15 +72,18 @@ const Home = () => {
     updateCounts();
   }, []);
 
-  const handleSendEmails = () => {
-    // Get the emails of pending students from the state
+  const handleSendEmails = async () => {
     const pendingEmails = homeComponents.find(
       (component) => component.label === "Pending"
     )?.emails;
 
     if (pendingEmails && pendingEmails.length > 0) {
-      sendEmails(pendingEmails);
-      toast.success("Email sent successfully");
+      try {
+        const data = await sendEmails(pendingEmails);
+        toast.success("Email sent successfully");
+      } catch (err) {
+        toast.error("Operation failed: " + err.message);
+      }
     }
   };
 
