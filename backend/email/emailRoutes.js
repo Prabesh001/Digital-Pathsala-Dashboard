@@ -14,7 +14,7 @@ router.post("/send-emails", async (req, res) => {
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.5;">
             <h2 style="color: #2C3E50;">Join Digital Pathsala – Your Gateway to Learning!</h2>
-            <p>Dear Student,</p>
+            <p>Dear ${email.split("@")[0]},</p>
             <p>We are excited to invite you to <strong>Digital Pathsala</strong>, where learning meets innovation! Our expert instructors and comprehensive courses will help you achieve your goals in the digital world.</p>
             <p>🔹 Gain in-demand skills<br>🔹 Learn from industry professionals<br>🔹 Flexible online classes</p>
             <p>Click the link below to get started:</p>

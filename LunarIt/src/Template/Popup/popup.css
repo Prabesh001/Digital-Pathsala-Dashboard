@@ -13,7 +13,6 @@
 }
 .popup-window{
   height: max-content;
-  /* max-width: max-content; */
   background-color: white;
   padding: 20px 50px;
   border-radius: 8px;

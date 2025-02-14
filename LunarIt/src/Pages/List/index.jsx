@@ -187,8 +187,6 @@ const Student = () => {
                 "& .MuiButton-root": {
                   color: "black",
                 },
-                "& .MuiInputBase-root": {},
-                "& .MuiFormControl-root": {},
               },
             },
           }}
@@ -206,7 +204,13 @@ const Student = () => {
           pageSizeOptions={[25]}
         />
       </Box>
-      <Box display="flex" flexWrap={"wrap"} justifyContent="end" mt="20px" gap={1}>
+      <Box
+        display="flex"
+        flexWrap={"wrap"}
+        justifyContent="end"
+        mt="20px"
+        gap={1}
+      >
         <Button
           color="primary"
           variant="outlined"
@@ -232,7 +236,7 @@ const Student = () => {
           sx={{ mb: "8px", minWidth: "94px" }}
           disabled={selectedRows.length === 0}
         >
-          Delete Selected ({selectedRows.length})
+          Delete ({selectedRows.length})
         </Button>
       </Box>
     </Box>
