@@ -13,12 +13,11 @@
 }
 .popup-window{
   height: max-content;
-  width: max-content;
+  /* max-width: max-content; */
   background-color: white;
   padding: 20px 50px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  max-width: 400px;
   text-align: center;
   overflow: hidden;
 }

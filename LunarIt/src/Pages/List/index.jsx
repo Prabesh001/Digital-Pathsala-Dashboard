@@ -18,15 +18,8 @@ const Student = () => {
   const [team, setTeam] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const { popupVisibility, setPopupVisiblilty } = useContext(DigitalContext);
-  const [updateRow, setUpdateRow] = useState([]);
-
-  const handleUpdate = () => {
-    const neededRow = team.find(
-      (ele) => ele.id === selectedRows[selectedRows.length - 1]
-    );
-    setUpdateRow(neededRow);
-    setPopupVisiblilty("update");
-  };
+  const [updateRow, setUpdateRow] = useState(null);
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     const getStudents = async () => {
@@ -39,12 +32,47 @@ const Student = () => {
         }));
         setTeam(data);
       } catch (err) {
-        console.error("Error fetching students: " + err.message);
         toast.error("Error fetching students.");
       }
     };
     getStudents();
   }, []);
+
+  const handleUpdate = () => {
+    const neededRow = team.find(
+      (ele) => ele.id === selectedRows[selectedRows.length - 1]
+    );
+    setUpdateRow(neededRow);
+    setFormData({
+      email: neededRow.email,
+      phone: neededRow.phone,
+      course: neededRow.course,
+    });
+    setPopupVisiblilty("update");
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmitUpdate = async () => {
+    try {
+      const neededUpdate = { ...formData, status: "Purchased" };
+      await updateStudentStatus(updateRow.id, neededUpdate);
+      toast.success("Student updated successfully!");
+      setTeam(
+        team.map((student) =>
+          student.id === updateRow.id
+            ? { ...student, ...neededUpdate }
+            : student
+        )
+      );
+      setSelectedRows([]);
+      setPopupVisiblilty(null);
+    } catch (err) {
+      toast.error("Update failed: " + err.message);
+    }
+  };
 
   const handleDelete = async () => {
     try {
@@ -59,28 +87,14 @@ const Student = () => {
     }
   };
 
-  const updateStatus = async () => {
-    try {
-      for (const id of selectedRows) {
-        await updateStudentStatus(id);
-      }
-      toast.success("Students Status updated successfully!");
-      setSelectedRows([]);
-      setTimeout(() => window.location.reload(), 1000);
-    } catch (err) {
-      toast.error("Update failed: " + err.message);
-    }
-  };
-
   const handleSendEmail = async () => {
     try {
       const selectedStudents = team.filter((student) =>
         selectedRows.includes(student.id)
       );
       const emails = selectedStudents.map((student) => student.email);
-
-      const data = await sendEmails(emails);
-      toast.success("Email Sent Sucessfully!");
+      await sendEmails(emails);
+      toast.success("Email Sent Successfully!");
       setSelectedRows([]);
     } catch (err) {
       toast.error("Failed to send emails: " + err.message);
@@ -90,7 +104,7 @@ const Student = () => {
   return (
     <Box m="20px">
       <ToastContainer />
-      {popupVisibility === "update" ? (
+      {popupVisibility === "update" && (
         <Popup
           icon={<MdUpdate />}
           greeting="Update"
@@ -99,22 +113,25 @@ const Student = () => {
             <form className="flex flex-col gap-2 mt-3 text-[18px]">
               <input
                 type="text"
+                name="email"
                 className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500"
                 placeholder="Email"
-                value={updateRow.email}
+                value={formData.email}
                 readOnly
               />
               <input
                 type="text"
+                name="phone"
                 className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500"
                 placeholder="Phone no."
-                readOnly
-                value={updateRow.phone}
+                value={formData.phone}
+                onChange={handleChange}
               />
               <select
                 className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500 px-2"
-                name="tech"
-                defaultValue={updateRow.course}
+                name="course"
+                value={formData.course}
+                onChange={handleChange}
               >
                 <option value="MERN">MERN</option>
                 <option value="999 Offer">999 Offer</option>
@@ -123,13 +140,16 @@ const Student = () => {
             </form>
           }
           fnBtn={
-            <button className="border-2 hover:bg-green-600 border-green-600 bg-green-700 transition-all duration-300 px-3 py-1 text-white rounded-[5px]">
+            <button
+              onClick={handleSubmitUpdate}
+              className="border-2 hover:bg-green-600 border-green-600 bg-green-700 transition-all duration-300 px-3 py-1 text-white rounded-[5px]"
+            >
               Update
             </button>
           }
-          closePopup={() => setPopupVisiblilty("")}
+          closePopup={() => setPopupVisiblilty(null)}
         />
-      ) : null}
+      )}
       <Box
         sx={{
           "& .MuiDataGrid-root": { border: "none" },
@@ -145,6 +165,7 @@ const Student = () => {
           checkboxSelection
           sx={{
             maxHeight: "74vh",
+            minHeight: "20vh",
             boxShadow: "1px 0 3px lightgray, -1px 0 3px lightgray",
             "& .MuiDataGrid-columnHeaders": {
               fontSize: "16px",
@@ -185,33 +206,25 @@ const Student = () => {
           pageSizeOptions={[25]}
         />
       </Box>
-      <Box
-        display="flex"
-        flexWrap={"wrap"}
-        justifyContent="end"
-        mt="20px"
-        gap={1}
-      >
+      <Box display="flex" flexWrap={"wrap"} justifyContent="end" mt="20px" gap={1}>
         <Button
           color="primary"
           variant="outlined"
-          sx={{ mb: "8px", minWidth: "94px" }}
           onClick={handleUpdate}
+          sx={{ mb: "8px", minWidth: "94px" }}
           disabled={selectedRows.length === 0}
         >
-          Update to Purchased ({selectedRows.length})
+          Update ({selectedRows.length})
         </Button>
-
         <Button
           color="primary"
           variant="contained"
-          sx={{ mb: "8px", minWidth: "94px" }}
           onClick={handleSendEmail}
+          sx={{ mb: "8px", minWidth: "94px" }}
           disabled={selectedRows.length === 0}
         >
           Send Mail ({selectedRows.length})
         </Button>
-
         <Button
           color="secondary"
           variant="contained"

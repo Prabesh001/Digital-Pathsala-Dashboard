@@ -80,14 +80,12 @@ export const loginAdmin = async (email, password) => {
   }
 };
 
-export const updateStudentStatus = async (id) => {
+export const updateStudentStatus = async (id, updatedFields) => {
   try {
-    const updatedValue = { status: "Purchased" };
-    const response = await axios.patch(`${student_url}/${id}`, updatedValue);
-
+    const response = await axios.patch(`${student_url}/${id}`, updatedFields);
     return response.data;
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error updating student status:", err);
     throw err;
   }
 };
