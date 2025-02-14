@@ -151,7 +151,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
           <div className="flex items-center pr-4">
             <button
               onClick={() => setPopupVisiblilty("logout")}
-              className="select-none flex transition-all duration-200 items-center border-2 text-gray-500 hover:bg-red-600 hover:text-white rounded-3xl px-4 py-2 hover:border-gray-500"
+              className="select-none flex transition-all duration-200 items-center border-2 text-gray-500 hover:bg-red-600 hover:text-white rounded-3xl px-4 py-2 dark:hover:border-gray-500 hover:border-red-600"
             >
               Logout
             </button>

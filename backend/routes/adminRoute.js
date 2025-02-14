@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const express = require("express");
 const router = express.Router();
 
-router.post("/admin", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -28,7 +28,7 @@ router.post("/admin", async (req, res) => {
   }
 });
 
-router.get("/admin", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const admin = await Admin.find();
     res.json(admin);
@@ -38,7 +38,7 @@ router.get("/admin", async (req, res) => {
 });
 
 router
-  .route("/admin/:email")
+  .route("/:email")
   .get(async (req, res) => {
     try {
       const { email } = req.params;
@@ -67,7 +67,7 @@ router
   });
 
 //login
-router.post("/admin/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {

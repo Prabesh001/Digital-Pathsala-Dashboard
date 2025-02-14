@@ -20,8 +20,8 @@ mongoose
   .catch((err) => console.error("Failed to connect to MongoDB Atlas:", err));
 
 app.use("/api", emailRoutes);
-app.use("/api", studentRoute);
-app.use("/api", adminRoute);
+app.use("/api/students", studentRoute);
+app.use("/api/admin", adminRoute);
 
 const getMail = async () => {
   try {

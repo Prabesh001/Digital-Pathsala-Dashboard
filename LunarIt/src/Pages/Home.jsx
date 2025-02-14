@@ -156,9 +156,9 @@ const Button = ({ className, onClick }) => {
       className={`text-white border border-indigo-600 py-2 px-3 rounded inline-flex items-center ${className} hover:cursor-pointer`}
       onClick={onClick}
     >
-      <span>Send Mail</span>
+      <span className="text-indigo-600 dark:text-white">Send Mail</span>
       <svg
-        className="w-4"
+        className="w-4 text-indigo-600 dark:text-white"
         fill="none"
         stroke="currentColor"
         strokeLinecap="round"

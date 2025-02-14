@@ -194,14 +194,6 @@ const Student = () => {
           onRowSelectionModelChange={(newSelection) => {
             setSelectedRows(newSelection);
           }}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 25,
-              },
-            },
-          }}
-          pageSizeOptions={[25]}
         />
       </Box>
       <Box

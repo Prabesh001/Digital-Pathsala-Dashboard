@@ -2,7 +2,7 @@ const {Student} = require("../Schema/schema");
 const express = require("express");
 const router = express.Router();
 
-router.get("/students", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const students = await Student.find();
     res.json(students);
@@ -12,7 +12,7 @@ router.get("/students", async (req, res) => {
 });
 
 router
-  .route("/students/:id")
+  .route("/:id")
   .get(async (req, res) => {
     try {
       const _id = req.params.id;
@@ -58,7 +58,7 @@ router
     }
   });
 
-router.post("/students", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { name, email, phone, course, status, date, remarks } = req.body;
     if (!email || !phone || !course || !status || !date || !remarks) {
