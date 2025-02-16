@@ -19,7 +19,10 @@ const Dashboard = () => {
   const [disableBtn, setDisableBtn] = useState(false);
   const [showSidebar, setShowSidebar] = useState(window.innerWidth > 900);
   const [popupVisibility, setPopupVisiblilty] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useLocalStorage( "selected-index", "Form" );
+  const [selectedIndex, setSelectedIndex] = useLocalStorage(
+    "selected-index",
+    "Form"
+  );
 
   useEffect(() => {
     const { pathname } = location;
@@ -27,29 +30,21 @@ const Dashboard = () => {
       (nav) =>
         nav.label.toLowerCase() === pathname.replace("/", "").toLowerCase()
     );
-    if (myIndex) {
-      setSelectedIndex(myIndex.label);
-    } else {
-      setSelectedIndex(null);
-    }
-  }, [location.pathname]);
+    setSelectedIndex(myIndex ? myIndex.label : null);
+  }, [location.pathname, selectedIndex]);
 
   useEffect(() => {
     const handleResize = () => {
-      setShowSidebar(window.innerWidth > 900);
+      const isLargeScreen = window.innerWidth > 900;
+      setShowSidebar(isLargeScreen);
+      setDisableBtn(isLargeScreen);
     };
+  
     window.addEventListener("resize", handleResize);
+    handleResize(); 
+  
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  useEffect(() => {
-    if (window.innerWidth > 900) {
-      setDisableBtn(true);
-    } else {
-      setDisableBtn(false);
-    }
-    return () => setDisableBtn(false);
-  }, [window.innerWidth]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -57,11 +52,11 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex bg-gray-200" style={{ minHeight: "100vh" }}>
+    <div className="flex bg-gray-200 h-screen min-h-screen">
       {popupVisibility === "logout" && (
         <Popup
-        gs={"text-red-600"}
-        icon={<MdLogout size={30}/>}
+          gs={"text-red-600"}
+          icon={<MdLogout size={30} />}
           greeting="Logout"
           message="Are you sure you want to Logout?"
           closePopup={() => setPopupVisiblilty("")}
@@ -122,7 +117,7 @@ const Dashboard = () => {
       <div
         className={`transition-all duration-300 ${
           showSidebar ? "ml-64" : ""
-        } flex-col flex-1 overflow-y-auto min-h-full`}
+        } flex-col flex-1 overflow-y-auto min-h-full lg:overflow-y-hidden`}
       >
         <div className="flex items-center justify-between min-h-16 h-16 dark:bg-[#001750] dark:opacity-65 darktext-white bg-white dark:border-b-slate-500 border-b border-gray-200">
           <div className="flex items-center px-4">
@@ -141,11 +136,7 @@ const Dashboard = () => {
                 }
               />
             </button>
-            <input
-              className=" dark:text-white dark:border-gray-500 mx-4 w-full border rounded-md px-4 py-2"
-              type="text"
-              placeholder="Search"
-            />
+            
           </div>
           <div className="flex items-center pr-4">
             <button
@@ -158,7 +149,13 @@ const Dashboard = () => {
         </div>
 
         <DigitalContext.Provider
-          value={ {selectedIndex ,setSelectedIndex ,popupVisibility ,setPopupVisiblilty }}>
+          value={{
+            selectedIndex,
+            setSelectedIndex,
+            popupVisibility,
+            setPopupVisiblilty,
+          }}
+        >
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/form" element={<Form />} />

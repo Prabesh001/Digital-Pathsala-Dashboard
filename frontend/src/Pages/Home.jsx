@@ -93,7 +93,7 @@ const Home = () => {
 
   return (
     <div
-      className={`w-full p-1 pb-4 pt-4 dark:bg-gray-700 min-h-[90.8vh] md:min-h-screen`}
+      className={`w-full p-1 pb-4 pt-4 dark:bg-gray-700 min-h-[90.8vh] lg:min-h-screen`}
     >
       <ToastContainer />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:py-4 lg:px-8">
