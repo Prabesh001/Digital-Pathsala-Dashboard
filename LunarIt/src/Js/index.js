@@ -1,6 +1,7 @@
 import axios from "axios";
 const student_url = "http://localhost:5000/api/students";
 const admin_url = "http://localhost:5000/api/admin/login";
+const admin_verify_url = "http://localhost:5000/api/admin/verify";
 const email_url = "http://localhost:5000/api/send-emails";
 
 export const fetchStudents = async () => {
@@ -72,6 +73,7 @@ export const sendEmails = async (emails) => {
 export const loginAdmin = async (email, password) => {
   try {
     const response = await axios.post(`${admin_url}`, { email, password });
+    console.log(response)
     localStorage.setItem("token", response.data.token);
     return response.data;
   } catch (error) {
@@ -79,6 +81,26 @@ export const loginAdmin = async (email, password) => {
     return { error: error.response?.data?.error || "Login failed" };
   }
 };
+
+
+export const verifyAdmin = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return { error: "No token available" };
+
+  try {
+    const response = await axios.get(admin_verify_url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying admin:", error);
+    return { error: "Verification failed" };
+  }
+};
+
 
 export const updateStudentStatus = async (id, updatedFields) => {
   try {

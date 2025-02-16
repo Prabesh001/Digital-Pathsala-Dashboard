@@ -55,6 +55,49 @@ router.get("/", async (req, res) => {
   }
 });
 
+//login
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const admin = await Admin.findOne({ email });
+
+    if (!admin) {
+      return res.status(404).json({ error: "No user found!" });
+    }
+
+    const isMatch = await bcrypt.compare(password, admin.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ error: "Incorrect email or password" });
+    }
+
+    const user = { _id: admin._id, email: admin.email, name: admin.name };
+    const token = jwt.sign(user, process.env.SECRET_KEY);
+    res.json({ message: "Login successful!", token: token });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/verify", (req, res) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: No token found" });
+  }
+  const myToken = token.split(" ")[1];
+
+  jwt.verify(myToken, process.env.SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or expired token" });
+    }
+
+    res.json({ message: "User is authenticated", user: decoded });
+  });
+});
+
 router
   .route("/:email")
   .get(async (req, res) => {
@@ -83,31 +126,5 @@ router
       res.status(500).json({ message: err.message });
     }
   });
-
-//login
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const admin = await Admin.findOne({ email });
-
-    if (!admin) {
-      return res.status(404).json({ error: "No user found!" });
-    }
-
-    const isMatch = await bcrypt.compare(password, admin.password);
-
-    if (!isMatch) {
-      return res.status(401).json({ error: "Incorrect email or password" });
-    }
-
-    const user = { _id: admin._id, email: admin.email, name: admin.name };
-    const token = jwt.sign(user, process.env.SECRET_KEY);
-    res.json({ message: "Login successful!", token: token });
-  } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
 
 module.exports = router;

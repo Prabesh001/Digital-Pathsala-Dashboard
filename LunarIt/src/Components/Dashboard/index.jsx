@@ -12,7 +12,7 @@ import { MdLogout } from "react-icons/md";
 
 export const DigitalContext = createContext();
 
-const Dashboard = ({ setIsAuthenticated }) => {
+const Dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -52,7 +52,6 @@ const Dashboard = ({ setIsAuthenticated }) => {
   }, [window.innerWidth]);
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
     localStorage.clear();
     navigate("/");
   };

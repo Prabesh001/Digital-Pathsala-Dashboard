@@ -7,7 +7,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import { loginAdmin } from "../../Js";
 import { ToastContainer, toast } from "react-toastify";
 
-const LoginPage = ({ setIsAuthenticated }) => {
+const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +32,6 @@ const LoginPage = ({ setIsAuthenticated }) => {
         setError(true);
       } else {
         toast.success("Login Successful!");
-        setIsAuthenticated(true);
         navigate("/home");
       }
     } catch (error) {
