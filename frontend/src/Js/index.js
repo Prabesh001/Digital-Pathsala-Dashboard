@@ -73,7 +73,6 @@ export const sendEmails = async (emails) => {
 export const loginAdmin = async (email, password) => {
   try {
     const response = await axios.post(`${admin_url}`, { email, password });
-    console.log(response)
     localStorage.setItem("token", response.data.token);
     return response.data;
   } catch (error) {

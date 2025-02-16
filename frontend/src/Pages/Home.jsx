@@ -42,7 +42,7 @@ const Home = () => {
         .filter((student) => student.status === "Pending")
         .map((student) => student.email);
 
-      const pendingCount = pendingEmails.length; // The number of students with "Pending" status
+      const pendingCount = pendingEmails.length;
       const followUpCount = students.filter(
         (student) => student.status === "Follow Up"
       ).length;
@@ -55,7 +55,7 @@ const Home = () => {
         prevState.map((component) => {
           switch (component.label) {
             case "Pending":
-              return { ...component, num: pendingCount, emails: pendingEmails }; // Store emails in "Pending" component
+              return { ...component, num: pendingCount, emails: pendingEmails };
             case "Purchased":
               return { ...component, num: purchasedCount };
             case "Follow Up":
@@ -76,6 +76,10 @@ const Home = () => {
     const pendingEmails = homeComponents.find(
       (component) => component.label === "Pending"
     )?.emails;
+
+    if(pendingEmails.length<1){
+      toast.warn("No emails found!")
+    }
 
     if (pendingEmails && pendingEmails.length > 0) {
       try {
@@ -155,7 +159,7 @@ const Button = ({ className, onClick }) => {
       className={`text-white border border-indigo-600 py-2 px-3 rounded inline-flex items-center ${className} hover:cursor-pointer`}
       onClick={onClick}
     >
-      <span className="text-indigo-600 dark:text-white">Send Mail</span>
+      <span className="text-indigo-600 dark:text-white select-none">Send Mail</span>
       <svg
         className="w-4 text-indigo-600 dark:text-white"
         fill="none"
