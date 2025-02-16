@@ -58,7 +58,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
   };
 
   return (
-    <div className="flex bg-gray-100" style={{ minHeight: "100vh" }}>
+    <div className="flex bg-gray-200" style={{ minHeight: "100vh" }}>
       {popupVisibility === "logout" && (
         <Popup
         gs={"text-red-600"}

@@ -1,7 +1,26 @@
-const {Admin} = require("../Schema/schema")
+const { Admin } = require("../Schema/schema");
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
+
+const authenticateToken = (req, res, next) => {
+  const token = req.cookies.user;
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized access, please log in" });
+  }
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or expired token" });
+    }
+    req.admin = decoded;
+    next();
+  });
+};
 
 router.post("/", async (req, res) => {
   try {
@@ -11,13 +30,12 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newAdmin = new Admin({
       name,
       email,
-      password: hashedPassword, // Use hashed password
+      password: hashedPassword,
     });
 
     await newAdmin.save();
@@ -83,7 +101,9 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Incorrect email or password" });
     }
 
-    res.json({ message: "Login successful!", admin });
+    const user = { _id: admin._id, email: admin.email, name: admin.name };
+    const token = jwt.sign(user, process.env.SECRET_KEY);
+    res.json({ message: "Login successful!", token: token });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Server error" });

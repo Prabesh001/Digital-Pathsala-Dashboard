@@ -46,6 +46,9 @@ const LoginPage = ({ setIsAuthenticated }) => {
   return (
     <div className="login-page">
       <ToastContainer />
+      {loading && (
+        <div className="fixed w-screen h-screen backdrop-blur-[1px] bg-[#00000022] z-[100]"></div>
+      )}
       <h1 className="font-bold text-2xl text-nowrap">Digital Pathsala</h1>
       <i className="text-gray-500">(Employee Only)</i>
       <div className="login-container">
