@@ -11,6 +11,31 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  try {
+    const { name, email, phone, course, status, date, remarks } = req.body;
+    if (!email || !phone || !course || !status || !date || !remarks) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const newStudent = new Student({
+      name,
+      email,
+      phone,
+      course,
+      date,
+      status,
+      remarks,
+    });
+
+    await newStudent.save();
+    res.status(201).json({ message: "Student added successfully", newStudent });
+  } catch (err) {
+    console.error("Error in adding Student:", err);
+    res.status(500).json({ message: err.message, error: err });
+  }
+});
+
 router
   .route("/:id")
   .get(async (req, res) => {
@@ -57,30 +82,5 @@ router
       res.status(500).json({ message: err.message });
     }
   });
-
-router.post("/", async (req, res) => {
-  try {
-    const { name, email, phone, course, status, date, remarks } = req.body;
-    if (!email || !phone || !course || !status || !date || !remarks) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
-
-    const newStudent = new Student({
-      name,
-      email,
-      phone,
-      course,
-      date,
-      status,
-      remarks,
-    });
-
-    await newStudent.save();
-    res.status(201).json({ message: "Student added successfully", newStudent });
-  } catch (err) {
-    console.error("Error in adding Student:", err);
-    res.status(500).json({ message: err.message, error: err });
-  }
-});
 
 module.exports = router;

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import "./index.css";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";

@@ -18,6 +18,7 @@ const Dashboard = () => {
 
   const [disableBtn, setDisableBtn] = useState(false);
   const [showSidebar, setShowSidebar] = useState(window.innerWidth > 900);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 450);
   const [popupVisibility, setPopupVisiblilty] = useState(null);
   const [selectedIndex, setSelectedIndex] = useLocalStorage(
     "selected-index",
@@ -35,14 +36,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      const isLargeScreen = window.innerWidth > 900;
-      setShowSidebar(isLargeScreen);
-      setDisableBtn(isLargeScreen);
+      const screenWidth = window.innerWidth;
+      setShowSidebar(screenWidth > 900);
+      setDisableBtn(screenWidth > 900);
+      setIsMobile(screenWidth < 450);
     };
-  
+
     window.addEventListener("resize", handleResize);
-    handleResize(); 
-  
+    handleResize();
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -72,7 +74,9 @@ const Dashboard = () => {
       )}
       <div
         className={`fixed left-0 top-0 h-full w-64 bg-gray-800 transition-transform duration-300 
-          ${showSidebar ? "translate-x-0" : "-translate-x-full"}`}
+          ${showSidebar ? "translate-x-0" : "-translate-x-full"} ${
+          isMobile ? "z-[1000]" : ""
+        }`}
       >
         <div
           onClick={() => {
@@ -84,7 +88,7 @@ const Dashboard = () => {
           <img
             src="https://pps.whatsapp.net/v/t61.24694-24/473399879_1135208531537657_5628410588546111998_n.jpg?stp=dst-jpg_s96x96_tt6&ccb=11-4&oh=01_Q5AaIClSSxNPpkx0yaphd6ITfy84lmFYiGRGb7h-0dL1h74S&oe=67B6C01D&_nc_sid=5e03e0&_nc_cat=102"
             alt="DP"
-            className="h-12 rounded-3xl mr-2"
+            className="h-12 rounded-[50%] mr-2"
           />
           <span className="text-white font-bold uppercase">
             Digital Pathshala
@@ -98,6 +102,7 @@ const Dashboard = () => {
                 onClick={() => {
                   setSelectedIndex(item.label);
                   navigate(`/${item.label}`);
+                  if (isMobile) setShowSidebar(false);
                 }}
                 className={`flex items-center px-4 py-2 text-gray-100 
                   ${
@@ -115,7 +120,7 @@ const Dashboard = () => {
       </div>
 
       <div
-        className={`transition-all duration-300 ${
+        className={`transition-all duration-300 ${!isMobile &&
           showSidebar ? "ml-64" : ""
         } flex-col flex-1 overflow-y-auto min-h-full lg:overflow-y-hidden`}
       >
@@ -124,7 +129,7 @@ const Dashboard = () => {
             <button
               className="text-gray-500 focus:outline-none focus:text-gray-700 cursor-pointer"
               onClick={() => {
-                disableBtn === false && setShowSidebar(!showSidebar);
+                if (!disableBtn) setShowSidebar(!showSidebar);
               }}
             >
               <SVG
@@ -136,7 +141,6 @@ const Dashboard = () => {
                 }
               />
             </button>
-            
           </div>
           <div className="flex items-center pr-4">
             <button
@@ -148,21 +152,27 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <DigitalContext.Provider
-          value={{
-            selectedIndex,
-            setSelectedIndex,
-            popupVisibility,
-            setPopupVisiblilty,
+        <div
+          onClick={() => {
+            if (isMobile) setShowSidebar(false);
           }}
         >
-          <Routes>
-            <Route path="/home" element={<Home />} />
-            <Route path="/form" element={<Form />} />
-            <Route path="/students" element={<List />} />
-            <Route path="*" element={<Error />} />
-          </Routes>
-        </DigitalContext.Provider>
+          <DigitalContext.Provider
+            value={{
+              selectedIndex,
+              setSelectedIndex,
+              popupVisibility,
+              setPopupVisiblilty,
+            }}
+          >
+            <Routes>
+              <Route path="/home" element={<Home />} />
+              <Route path="/form" element={<Form />} />
+              <Route path="/students" element={<List />} />
+              <Route path="*" element={<Error />} />
+            </Routes>
+          </DigitalContext.Provider>
+        </div>
       </div>
     </div>
   );

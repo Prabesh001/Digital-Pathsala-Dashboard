@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Box from "@mui/material/Box";
+import { Box, Typography } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { columns } from "../../Js/data";
 import { Button } from "@mui/material";
@@ -15,7 +15,7 @@ import { DigitalContext } from "../../Components/Dashboard";
 import { MdUpdate } from "react-icons/md";
 
 const Student = () => {
-  const [team, setTeam] = useState([]);
+  const [students, setStudents] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const { popupVisibility, setPopupVisiblilty } = useContext(DigitalContext);
   const [updateRow, setUpdateRow] = useState(null);
@@ -30,7 +30,7 @@ const Student = () => {
           rank: i + 1,
           ...ele,
         }));
-        setTeam(data);
+        setStudents(data);
       } catch (err) {
         toast.error("Error fetching students.");
       }
@@ -39,7 +39,7 @@ const Student = () => {
   }, []);
 
   const handleUpdate = () => {
-    const neededRow = team.find(
+    const neededRow = students.find(
       (ele) => ele.id === selectedRows[selectedRows.length - 1]
     );
     setUpdateRow(neededRow);
@@ -60,8 +60,8 @@ const Student = () => {
       const neededUpdate = { ...formData, status: "Purchased" };
       await updateStudentStatus(updateRow.id, neededUpdate);
       toast.success("Student updated successfully!");
-      setTeam(
-        team.map((student) =>
+      setStudents(
+        students.map((student) =>
           student.id === updateRow.id
             ? { ...student, ...neededUpdate }
             : student
@@ -81,7 +81,9 @@ const Student = () => {
       }
       toast.success("Students deleted successfully!");
       setSelectedRows([]);
-      setTeam(team.filter((student) => !selectedRows.includes(student.id)));
+      setStudents(
+        students.filter((student) => !selectedRows.includes(student.id))
+      );
     } catch (err) {
       toast.error("Delete failed: " + err.message);
     }
@@ -89,7 +91,7 @@ const Student = () => {
 
   const handleSendEmail = async () => {
     try {
-      const selectedStudents = team.filter((student) =>
+      const selectedStudents = students.filter((student) =>
         selectedRows.includes(student.id)
       );
       const emails = selectedStudents.map((student) => student.email);
@@ -103,6 +105,9 @@ const Student = () => {
 
   return (
     <Box m="20px">
+      <h4 className="font-bold text-3xl text-sky-700 mb-2 underline">
+        List of Students
+      </h4>
       <ToastContainer />
       {popupVisibility === "update" && (
         <Popup
@@ -160,7 +165,7 @@ const Student = () => {
         }}
       >
         <DataGrid
-          rows={team}
+          rows={students}
           columns={columns}
           checkboxSelection
           sx={{
@@ -172,6 +177,7 @@ const Student = () => {
               fontWeight: "bold",
               border: "1px solid lightgray",
             },
+            "& .MuiDataGrid-cell": {},
           }}
           slots={{
             toolbar: GridToolbar,

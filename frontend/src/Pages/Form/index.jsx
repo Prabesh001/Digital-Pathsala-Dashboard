@@ -41,6 +41,9 @@ const Form = () => {
 
   return (
       <Box m="20px">
+        <h4 className="font-bold text-3xl text-sky-700 mb-3 underline">
+        Student Form
+      </h4>
         <ToastContainer />
         <Formik
           onSubmit={handleFormSubmit}
