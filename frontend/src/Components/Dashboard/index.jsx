@@ -9,6 +9,7 @@ import useLocalStorage from "../../Template/useLocalStorage";
 import Popup from "../../Template/Popup";
 import { dashboardComponents } from "../../Js/data";
 import { MdLogout } from "react-icons/md";
+import logo from "../../assets/logo.jpg";
 
 export const DigitalContext = createContext();
 
@@ -32,7 +33,7 @@ const Dashboard = () => {
         nav.label.toLowerCase() === pathname.replace("/", "").toLowerCase()
     );
     setSelectedIndex(myIndex ? myIndex.label : null);
-  }, [location.pathname, selectedIndex]);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -85,11 +86,7 @@ const Dashboard = () => {
           }}
           className="flex items-center justify-center h-16 bg-gray-900 cursor-pointer"
         >
-          <img
-            src="https://pps.whatsapp.net/v/t61.24694-24/473399879_1135208531537657_5628410588546111998_n.jpg?stp=dst-jpg_s96x96_tt6&ccb=11-4&oh=01_Q5AaIClSSxNPpkx0yaphd6ITfy84lmFYiGRGb7h-0dL1h74S&oe=67B6C01D&_nc_sid=5e03e0&_nc_cat=102"
-            alt="DP"
-            className="h-12 rounded-[50%] mr-2"
-          />
+          <img src={logo} alt="DP" className="h-12 rounded-[50%] mr-2" />
           <span className="text-white font-bold uppercase">
             Digital Pathshala
           </span>
@@ -120,8 +117,8 @@ const Dashboard = () => {
       </div>
 
       <div
-        className={`transition-all duration-300 ${!isMobile &&
-          showSidebar ? "ml-64" : ""
+        className={`transition-all duration-300 ${
+          !isMobile && showSidebar ? "ml-64" : ""
         } flex-col flex-1 overflow-y-auto min-h-full lg:overflow-y-hidden`}
       >
         <div className="flex items-center justify-between min-h-16 h-16 dark:bg-[#001750] dark:opacity-65 darktext-white bg-white dark:border-b-slate-500 border-b border-gray-200">

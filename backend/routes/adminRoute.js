@@ -4,24 +4,6 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 
-const authenticateToken = (req, res, next) => {
-  const token = req.cookies.user;
-
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized access, please log in" });
-  }
-
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: "Invalid or expired token" });
-    }
-    req.admin = decoded;
-    next();
-  });
-};
-
 router.post("/", async (req, res) => {
   try {
     const { name, email, password } = req.body;
